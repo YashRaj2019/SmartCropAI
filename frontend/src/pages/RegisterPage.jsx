@@ -1,10 +1,11 @@
 ﻿import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Lock, Mail, User, Home, ArrowRight, AlertCircle, Sprout, CheckCircle2 } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Lock, Mail, User, Home, ArrowRight, AlertCircle, Sprout, ShieldAlert } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { register } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,6 +13,9 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const redirectPath = location.state?.from || '/analyze';
+  const gateMessage = location.state?.message;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +31,7 @@ export default function RegisterPage() {
     try {
       setLoading(true);
       await register(name, email, password, farmName || 'My Farm');
-      navigate('/analyze');
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       setError(err.response?.data?.detail?.message || 'Registration failed. Please try again.');
     } finally {
@@ -45,6 +49,13 @@ export default function RegisterPage() {
           <h2 className="text-2xl font-extrabold text-white">Create Producer Account</h2>
           <p className="text-xs text-slate-400">Join SmartCrop AI for field diagnostics, harvest tracking, and yield intelligence.</p>
         </div>
+
+        {gateMessage && (
+          <div className="p-3.5 rounded-xl bg-amber-950/60 border border-amber-500/40 text-amber-200 text-xs flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 flex-shrink-0 text-amber-400" />
+            <span>{gateMessage}</span>
+          </div>
+        )}
 
         {error && (
           <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-200 text-xs flex items-center gap-2">
@@ -120,7 +131,7 @@ export default function RegisterPage() {
           >
             {loading ? <span>Creating Account...</span> : (
               <>
-                <span>Register & Open Dashboard</span>
+                <span>Register & Continue</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -130,7 +141,7 @@ export default function RegisterPage() {
         <div className="pt-2 text-center border-t border-slate-800">
           <p className="text-xs text-slate-400">
             Already registered?{' '}
-            <Link to="/login" className="text-emerald-400 font-bold hover:underline">
+            <Link to="/login" state={location.state} className="text-emerald-400 font-bold hover:underline">
               Log In here
             </Link>
           </p>

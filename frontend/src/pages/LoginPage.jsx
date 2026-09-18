@@ -1,15 +1,19 @@
 ﻿import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Lock, Mail, ArrowRight, AlertCircle, Sprout, CheckCircle2 } from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Lock, Mail, ArrowRight, AlertCircle, Sprout, ShieldAlert } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const redirectPath = location.state?.from || '/analyze';
+  const gateMessage = location.state?.message;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,7 +25,7 @@ export default function LoginPage() {
     try {
       setLoading(true);
       await login(email, password);
-      navigate('/analyze');
+      navigate(redirectPath, { replace: true });
     } catch (err) {
       setError(err.response?.data?.detail?.message || 'Invalid email or password.');
     } finally {
@@ -36,9 +40,16 @@ export default function LoginPage() {
           <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400">
             <Sprout className="w-6 h-6" />
           </div>
-          <h2 className="text-2xl font-extrabold text-white">Welcome Back</h2>
-          <p className="text-xs text-slate-400">Access your farm crop diagnostic workspace and historical field data.</p>
+          <h2 className="text-2xl font-extrabold text-white">Welcome to SmartCrop AI</h2>
+          <p className="text-xs text-slate-400">Sign in to execute real-time AI disease diagnostics and farm simulations.</p>
         </div>
+
+        {gateMessage && (
+          <div className="p-3.5 rounded-xl bg-amber-950/60 border border-amber-500/40 text-amber-200 text-xs flex items-center gap-2">
+            <ShieldAlert className="w-4 h-4 flex-shrink-0 text-amber-400" />
+            <span>{gateMessage}</span>
+          </div>
+        )}
 
         {error && (
           <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-500/40 text-rose-200 text-xs flex items-center gap-2">
@@ -85,7 +96,7 @@ export default function LoginPage() {
           >
             {loading ? <span>Authenticating...</span> : (
               <>
-                <span>Sign In to Dashboard</span>
+                <span>Sign In & Continue</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -95,7 +106,7 @@ export default function LoginPage() {
         <div className="pt-2 text-center border-t border-slate-800">
           <p className="text-xs text-slate-400">
             Don't have an account yet?{' '}
-            <Link to="/register" className="text-emerald-400 font-bold hover:underline">
+            <Link to="/register" state={location.state} className="text-emerald-400 font-bold hover:underline">
               Register Free
             </Link>
           </p>

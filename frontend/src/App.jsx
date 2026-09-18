@@ -11,6 +11,7 @@ import WeatherPage from './pages/WeatherPage';
 import ModelsPage from './pages/ModelsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
@@ -22,10 +23,10 @@ export default function App() {
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              <Route path="/analyze" element={<AnalyzePage />} />
-              <Route path="/results" element={<ResultsPage />} />
-              <Route path="/history" element={<HistoryPage />} />
-              <Route path="/compare" element={<ComparePage />} />
+              <Route path="/analyze" element={<ProtectedRoute><AnalyzePage /></ProtectedRoute>} />
+              <Route path="/results" element={<ProtectedRoute><ResultsPage /></ProtectedRoute>} />
+              <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
+              <Route path="/compare" element={<ProtectedRoute><ComparePage /></ProtectedRoute>} />
               <Route path="/weather" element={<WeatherPage />} />
               <Route path="/models" element={<ModelsPage />} />
               <Route path="/login" element={<LoginPage />} />
