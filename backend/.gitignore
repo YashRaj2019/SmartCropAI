@@ -1,0 +1,15 @@
+# Python byte-code
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments & Secrets
+.env
+.env.local
+.env.*.local
+*.log
+
+# Pytest & mypy
+.pytest_cache/
+.mypy_cache/

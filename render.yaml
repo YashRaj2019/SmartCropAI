@@ -1,17 +1,29 @@
+# Render Blueprint Specification for SmartCrop AI Backend
 services:
   - type: web
-    name: smartcrop-ai
-    env: docker
-    plan: free
+    name: smartcrop-ai-backend
+    env: python
     region: oregon
-    dockerfilePath: ./Dockerfile
-    autoDeploy: true
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
     envVars:
-      - key: PORT
-        value: 10000
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: ML_MODE
         value: production
-      - key: DATABASE_NAME
-        value: smartcrop_db
+      - key: DISEASE_MODEL_PATH
+        value: models/disease/model.pt
+      - key: YIELD_MODEL_PATH
+        value: models/yield/model.joblib
+      - key: RISK_MODEL_PATH
+        value: models/risk/model.joblib
       - key: ENABLE_EXPLANATIONS
-        value: true
+        value: "true"
+      - key: CONFIDENCE_THRESHOLD
+        value: "0.60"
+      - key: STORAGE_DIR
+        value: storage
+      - key: CORS_ORIGINS
+        value: "*"
