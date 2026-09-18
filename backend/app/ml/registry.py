@@ -1,13 +1,18 @@
 from typing import Dict, Any
-from backend.app.ml.disease_service import DiseaseModelService
-from backend.app.ml.yield_service import YieldModelService
-from backend.app.ml.risk_service import RiskModelService
+
 
 class ModelRegistry:
     """
     Central registry managing all active ML services and overall system model state.
+    Instantiated lazily on first request — NOT at import time — to avoid OOM on
+    memory-constrained hosts (Render free tier 512 MB) where torch/xgboost loading
+    during the import phase would crash before uvicorn can bind the port.
     """
     def __init__(self):
+        from backend.app.ml.disease_service import DiseaseModelService
+        from backend.app.ml.yield_service import YieldModelService
+        from backend.app.ml.risk_service import RiskModelService
+
         self.disease_service = DiseaseModelService()
         self.yield_service = YieldModelService()
         self.risk_service = RiskModelService()
@@ -24,4 +29,23 @@ class ModelRegistry:
             ) else "demo"
         }
 
-model_registry = ModelRegistry()
+
+# Lazy singleton — loaded on first API call, never at import time
+_registry: ModelRegistry = None
+
+def get_registry() -> ModelRegistry:
+    global _registry
+    if _registry is None:
+        _registry = ModelRegistry()
+    return _registry
+
+
+# Backward-compat alias used by existing endpoint imports
+# (endpoints that do `from backend.app.ml.registry import model_registry`
+#  will get a proxy object; migrate to get_registry() over time)
+class _LazyRegistryProxy:
+    """Transparent proxy that defers ModelRegistry construction to first attribute access."""
+    def __getattr__(self, name):
+        return getattr(get_registry(), name)
+
+model_registry = _LazyRegistryProxy()
