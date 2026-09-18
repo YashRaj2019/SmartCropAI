@@ -14,7 +14,7 @@ class RecommendationEngine:
         risk_score = risk_res.get("risk_score", 50)
         risk_level = risk_res.get("risk_level", "MEDIUM")
         
-        crop = inputs.get("crop_type", "Potato")
+        crop = disease_res.get("detected_crop") or inputs.get("crop_type", "Crop")
         hum = float(inputs.get("humidity", 65.0))
         ph = float(inputs.get("soil_ph", 6.5))
         moisture = float(inputs.get("soil_moisture", 45.0))

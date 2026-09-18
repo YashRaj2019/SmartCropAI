@@ -2,11 +2,10 @@ import os
 import json
 from PIL import Image
 import torch
-import torch.nn as F
-import numpy as np
+import torch.nn as nn
+from torchvision import transforms
 
 from ml.disease.dataset import ImageQualityAnalyzer
-from ml.disease.transforms import get_val_transforms
 from ml.disease.explain import GradCAMExplainer
 
 class DiseasePredictor:
@@ -15,126 +14,135 @@ class DiseasePredictor:
         self.labels_path = labels_path
         self.labels = self._load_labels()
         self.model = None
-        self.transforms = get_val_transforms(224)
+        self.transforms = transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+        ])
         self.is_production = False
         self.load()
 
     def _load_labels(self):
         if os.path.exists(self.labels_path):
-            with open(self.labels_path, 'r') as f:
-                return json.load(f)
-        return {
-            "0": {"name": "Potato Late Blight", "crop": "Potato", "status": "Diseased", "symptoms": ["Dark lesions", "White mold"]},
-            "1": {"name": "Potato Early Blight", "crop": "Potato", "status": "Diseased", "symptoms": ["Target spots", "Yellowing"]},
-            "2": {"name": "Potato Healthy", "crop": "Potato", "status": "Healthy", "symptoms": ["Vibrant green"]}
-        }
+            try:
+                with open(self.labels_path, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except Exception as e:
+                print(f"[DiseasePredictor] Error loading labels from {self.labels_path}: {e}")
+        return {}
 
     def load(self) -> bool:
         if os.path.exists(self.model_path):
             try:
-                # Set weights_only=False for complete PyTorch model architecture deserialization
                 self.model = torch.load(self.model_path, map_location=torch.device('cpu'), weights_only=False)
                 self.model.eval()
                 self.is_production = True
+                print(f"[DiseasePredictor] Successfully loaded production deep learning model from {self.model_path}")
                 return True
             except Exception as e:
-                print(f"[DiseasePredictor] Model load failed: {e}. Falling back to demo estimator.")
+                print(f"[DiseasePredictor] Model load failed: {e}. Falling back to state dict checkpoint.")
+        
+        weights_path = "models/disease/mobilenetv2_plant.pth"
+        if os.path.exists(weights_path):
+            try:
+                import torchvision.models as tv_models
+                m = tv_models.mobilenet_v2()
+                m.classifier[1] = nn.Sequential(nn.Dropout(0.2), nn.Linear(1280, 38))
+                m.load_state_dict(torch.load(weights_path, map_location='cpu'))
+                m.eval()
+                self.model = m
+                self.is_production = True
+                return True
+            except Exception as ex:
+                print(f"[DiseasePredictor] Failed to load mobilenetv2_plant.pth: {ex}")
+                
         self.is_production = False
         return False
 
-    def predict(self, pil_image: Image.Image, crop_type: str = "Potato") -> dict:
+    def predict(self, pil_image: Image.Image, crop_type: str = None) -> dict:
         quality = ImageQualityAnalyzer.evaluate(pil_image)
-        crop_clean = (crop_type or "Potato").strip().capitalize()
+        crop_clean = (crop_type or "").strip()
         
-        # 1. Computer Vision Image Chromatic & Lesion Analysis from actual pixels
-        img_np = np.array(pil_image.convert("RGB")).astype(np.float32)
-        r, g, b = img_np[:, :, 0], img_np[:, :, 1], img_np[:, :, 2]
-        
-        # Excess green index: 2G - R - B
-        exg = 2.0 * g - r - b
-        # Green plant tissue
-        healthy_green = (exg > 15) & (g > 40)
-        # Necrotic brown/black lesions (R > G, low B or dark discoloration)
-        necrotic_brown = (r > g * 0.92) & (r > 45) & (b < 110) & (~healthy_green)
-        # Chlorotic yellowing (High R, High G, lower B)
-        chlorotic_yellow = (r > 105) & (g > 105) & (b < 95) & (np.abs(r - g) < 45) & (~healthy_green)
-        # Rust pustules (High Red/Orange, low green/blue)
-        rust_orange = (r > 120) & (g > 45) & (g < 125) & (b < 70) & (~healthy_green)
-        
-        leaf_mask = healthy_green | necrotic_brown | chlorotic_yellow | rust_orange
-        total_leaf_pixels = max(1, np.sum(leaf_mask))
-        
-        green_ratio = float(np.sum(healthy_green) / total_leaf_pixels)
-        necrotic_ratio = float(np.sum(necrotic_brown) / total_leaf_pixels)
-        yellow_ratio = float(np.sum(chlorotic_yellow) / total_leaf_pixels)
-        rust_ratio = float(np.sum(rust_orange) / total_leaf_pixels)
-        
-        # 2. Filter candidate labels for the specific crop selected by user
-        crop_candidate_keys = [k for k, v in self.labels.items() if v.get("crop", "").lower() == crop_clean.lower()]
-        if not crop_candidate_keys:
-            crop_candidate_keys = ["0", "1", "2"]
+        if self.model is None or not self.labels:
+            return {
+                "model_type": "demo",
+                "model_name": "MobileNetV2 (PlantVillage 38-Class)",
+                "model_version": "1.0.0",
+                "disease": "Leaf Analysis Incomplete",
+                "detected_crop": crop_clean or "Plant",
+                "confidence": 0.50,
+                "alternatives": [],
+                "symptoms": ["Ensure leaf image is clear"],
+                "image_quality": quality
+            }
 
-        # 3. Score candidates based on actual image visual pathology + crop context
-        candidate_scores = {}
-        for k in crop_candidate_keys:
-            info = self.labels[k]
-            name = info.get("name", "").lower()
-            is_healthy_label = "healthy" in name
-            
-            if is_healthy_label:
-                if necrotic_ratio > 0.08 or yellow_ratio > 0.12 or rust_ratio > 0.08:
-                    score = max(0.02, 1.0 - (necrotic_ratio + yellow_ratio + rust_ratio) * 4.0)
-                else:
-                    score = 1.5 + green_ratio
-            elif "rust" in name:
-                score = rust_ratio * 5.0 + necrotic_ratio * 1.5
-            elif "yellow" in name or "curl" in name:
-                score = yellow_ratio * 5.0 + necrotic_ratio * 1.2
-            elif "early" in name:
-                score = necrotic_ratio * 4.0 + yellow_ratio * 2.0
-            elif "late" in name:
-                score = necrotic_ratio * 4.5 + (0.5 if necrotic_ratio > 0.08 else 0.0)
-            else:
-                score = necrotic_ratio * 3.0
-                
-            candidate_scores[k] = max(0.02, score)
+        rgb_image = pil_image.convert("RGB")
+        tensor = self.transforms(rgb_image).unsqueeze(0)
+        
+        with torch.no_grad():
+            logits = self.model(tensor)
+            probabilities = torch.softmax(logits, dim=1)[0]
 
-        # Normalize candidate probabilities
-        total_score = sum(candidate_scores.values()) or 1.0
-        normalized_probs = {k: v / total_score for k, v in candidate_scores.items()}
+        all_top_probs, all_top_indices = torch.topk(probabilities, min(5, len(probabilities)))
         
-        best_k = max(normalized_probs, key=normalized_probs.get)
-        disease_info = self.labels[best_k]
+        top_idx_str = str(all_top_indices[0].item())
+        top_confidence = float(all_top_probs[0].item())
+        top_info = self.labels.get(top_idx_str, {})
         
-        confidence = float(round(min(0.96, max(0.72, normalized_probs[best_k])), 2))
-        
+        primary_info = top_info
+        primary_confidence = top_confidence
+
         alternatives = []
-        for k, p in sorted(normalized_probs.items(), key=lambda item: item[1], reverse=True):
-            lbl = self.labels[k].get("name", f"Class {k}")
-            alternatives.append({"label": lbl, "probability": float(round(p, 4))})
-            
+        seen_names = set()
+        
+        for p, idx in zip(all_top_probs, all_top_indices):
+            k = str(idx.item())
+            info = self.labels.get(k, {})
+            name = info.get("name", f"Class {k}")
+            if name not in seen_names:
+                seen_names.add(name)
+                alternatives.append({
+                    "label": name,
+                    "crop": info.get("crop", ""),
+                    "status": info.get("status", "Diseased"),
+                    "probability": float(round(p.item(), 4))
+                })
+
+        alternatives.sort(key=lambda x: x["probability"], reverse=True)
+
         return {
             "model_type": "production" if self.is_production else "demo",
-            "model_name": "EfficientNet-B0 / MobileNetV2",
+            "model_name": "MobileNetV2 (PlantVillage 38-Class Deep CNN)",
             "model_version": "1.0.0",
-            "disease": disease_info.get("name", f"{crop_clean} Healthy"),
-            "confidence": confidence,
-            "alternatives": alternatives[:3],
-            "symptoms": disease_info.get("symptoms", ["Foliage inspection"]),
+            "disease": primary_info.get("name", "Unknown Foliar Condition"),
+            "detected_crop": primary_info.get("crop", crop_clean or "Plant"),
+            "status": primary_info.get("status", "Diseased"),
+            "description": primary_info.get("description", ""),
+            "confidence": float(round(min(0.99, max(0.50, primary_confidence)), 2)),
+            "raw_confidence": float(round(primary_confidence, 4)),
+            "alternatives": alternatives[:4],
+            "symptoms": primary_info.get("symptoms", ["Inspect leaf for foliar lesions"]),
             "image_quality": quality
         }
 
     def explain(self, pil_image: Image.Image, output_dir: str = "storage/gradcam") -> dict:
         os.makedirs(output_dir, exist_ok=True)
-        explainer = GradCAMExplainer(self.model)
-        tensor = self.transforms(pil_image).unsqueeze(0)
+        target_layer = None
+        if hasattr(self.model, "features"):
+            target_layer = self.model.features[-1]
+            
+        explainer = GradCAMExplainer(self.model, target_layer=target_layer)
+        rgb_image = pil_image.convert("RGB")
+        tensor = self.transforms(rgb_image).unsqueeze(0)
+        tensor.requires_grad = True
+        
         heatmap = explainer.generate_heatmap(tensor)
-        overlay = explainer.overlay_heatmap(pil_image, heatmap)
+        overlay = explainer.overlay_heatmap(rgb_image, heatmap)
         
         heatmap_path = os.path.join(output_dir, "latest_gradcam.jpg")
-        overlay.save(heatmap_path)
+        overlay.save(heatmap_path, quality=92)
         
         return {
             "heatmap_path": heatmap_path,
-            "explanation": "The highlighted bright yellow and red regions indicate the exact leaf areas that influenced the disease classification."
+            "explanation": "Grad-CAM visual heatmap highlighting the exact convolutional activation regions of the leaf that influenced the deep learning diagnosis."
         }

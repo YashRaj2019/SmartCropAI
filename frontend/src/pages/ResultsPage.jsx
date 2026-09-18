@@ -120,7 +120,7 @@ export default function ResultsPage() {
               <span className="text-xs font-extrabold text-emerald-400">{Math.round(disease_analysis.confidence * 100)}%</span>
             </div>
           </div>
-          <p className="text-[11px] text-slate-400">Crop: {farm_inputs.crop_type} ({farm_inputs.crop_variety})</p>
+          <p className="text-[11px] text-slate-400">Crop: <span className="text-white font-semibold">{disease_analysis.detected_crop || farm_inputs?.crop_type}</span> {farm_inputs?.crop_variety && farm_inputs.crop_variety !== 'Hybrid / Standard' ? `(${farm_inputs.crop_variety})` : ''}</p>
         </div>
 
         {/* Card 2: Predicted Yield */}
@@ -220,7 +220,7 @@ export default function ResultsPage() {
                         </span>
                       </div>
                       <p className="text-xs text-slate-300">Model: {disease_analysis.model_name} ({disease_analysis.model_version})</p>
-                      <p className="text-[11px] text-slate-400">Target Crop: {farm_inputs?.crop_type || 'Crop'} ({farm_inputs?.crop_variety || 'Variety'})</p>
+                      <p className="text-[11px] text-slate-400">Diagnosed Crop: <strong className="text-emerald-400 font-semibold">{disease_analysis.detected_crop || farm_inputs?.crop_type || 'Crop'}</strong></p>
                     </div>
                   </div>
                 </div>

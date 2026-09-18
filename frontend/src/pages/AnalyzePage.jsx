@@ -6,8 +6,8 @@ import ProcessingModal from '../components/ProcessingModal';
 import { apiService } from '../services/api';
 
 const DEFAULT_FORM = {
-  crop_type: 'Potato',
-  crop_variety: 'Kufri Jyoti',
+  crop_type: 'Auto-Detect',
+  crop_variety: 'Hybrid / Standard',
   growth_stage: 'Vegetative',
   sowing_date: '2025-02-15',
   location: 'Central Valley',
@@ -314,9 +314,19 @@ export default function AnalyzePage() {
                 onChange={handleInputChange}
                 className="w-full glass-input rounded-xl px-3.5 py-2.5 text-sm"
               >
-                <option value="Potato">Potato</option>
-                <option value="Tomato">Tomato</option>
+                <option value="Auto-Detect">✨ Auto-Detect Crop from Leaf (Recommended)</option>
                 <option value="Corn">Corn (Maize)</option>
+                <option value="Tomato">Tomato</option>
+                <option value="Potato">Potato</option>
+                <option value="Apple">Apple</option>
+                <option value="Grape">Grape</option>
+                <option value="Pepper">Bell Pepper</option>
+                <option value="Strawberry">Strawberry</option>
+                <option value="Peach">Peach</option>
+                <option value="Cherry">Cherry</option>
+                <option value="Orange">Citrus / Orange</option>
+                <option value="Squash">Squash</option>
+                <option value="Soybean">Soybean</option>
                 <option value="Wheat">Wheat</option>
                 <option value="Rice">Rice</option>
               </select>
