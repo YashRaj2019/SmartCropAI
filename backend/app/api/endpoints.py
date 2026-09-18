@@ -122,7 +122,8 @@ async def analyze_crop(
     temp_image_path = await _resolve_image_input(image, image_url)
 
     # 1. Run Disease Model
-    disease_input = {"image": temp_image_path, "crop_type": inputs_dict.get("crop_type", "Potato")}
+    crop_requested = inputs_dict.get("crop_type") or "Auto-Detect"
+    disease_input = {"image": temp_image_path, "crop_type": crop_requested}
     disease_res = await asyncio.to_thread(model_registry.disease_service.predict, disease_input)
     
     # 2. Generate Grad-CAM Explanation
@@ -132,6 +133,7 @@ async def analyze_crop(
 
     # 3. Prepare tabular input vector
     inputs_dict.update({
+        "crop_type": disease_res.get("detected_crop") or inputs_dict.get("crop_type", "Crop"),
         "disease_confidence": disease_res["confidence"],
         "disease_status": "Healthy" if "healthy" in disease_res["disease"].lower() else "Diseased"
     })
@@ -168,7 +170,7 @@ async def analyze_crop(
 async def predict_disease(
     image: Optional[UploadFile] = File(None),
     image_url: Optional[str] = Form(None),
-    crop_type: str = Form("Potato")
+    crop_type: str = Form("Auto-Detect")
 ):
     """Standalone crop disease prediction endpoint."""
     temp_image_path = await _resolve_image_input(image, image_url)

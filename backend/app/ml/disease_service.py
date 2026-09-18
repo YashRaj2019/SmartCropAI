@@ -20,7 +20,7 @@ class DiseaseModelService(BaseModelService):
 
     def predict(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
         image_input = inputs.get("image")
-        crop_type = inputs.get("crop_type", "Potato")
+        crop_type = inputs.get("crop_type") or "Auto-Detect"
 
         if isinstance(image_input, str) and os.path.exists(image_input):
             pil_image = Image.open(image_input)

@@ -492,5 +492,148 @@
       "Uniform growth and strong blossom set"
     ],
     "description": "Completely healthy tomato plant with optimal photosynthetic efficiency."
+  },
+  "38": {
+    "id": 38,
+    "raw_key": "Wheat___Wheat_Stem_Rust",
+    "name": "Wheat Stem Rust",
+    "crop": "Wheat",
+    "status": "Diseased",
+    "symptoms": [
+      "Reddish-brown to black elongated pustules on stems and leaves",
+      "Ruptured epidermis with dark spore dust",
+      "Premature lodging and grain shriveling"
+    ],
+    "description": "Destructive fungal disease caused by Puccinia graminis f. sp. tritici damaging stems and leaves."
+  },
+  "39": {
+    "id": 39,
+    "raw_key": "Wheat___Wheat_Stripe_Rust",
+    "name": "Wheat Stripe Rust",
+    "crop": "Wheat",
+    "status": "Diseased",
+    "symptoms": [
+      "Yellow-orange powdery stripes along leaf veins",
+      "Linear rows of urediniospores",
+      "Chlorotic foliage bleaching"
+    ],
+    "description": "Caused by Puccinia striiformis, thriving in cool, humid climates and decimating wheat grain yields."
+  },
+  "40": {
+    "id": 40,
+    "raw_key": "Wheat___Wheat_Leaf_Rust",
+    "name": "Wheat Leaf Rust",
+    "crop": "Wheat",
+    "status": "Diseased",
+    "symptoms": [
+      "Small circular to oval bright orange pustules",
+      "Scattered randomly across upper leaf surfaces",
+      "Premature leaf drying"
+    ],
+    "description": "Caused by Puccinia triticina, the most common rust of wheat worldwide."
+  },
+  "41": {
+    "id": 41,
+    "raw_key": "Wheat___Wheat_Powdery_Mildew",
+    "name": "Wheat Powdery Mildew",
+    "crop": "Wheat",
+    "status": "Diseased",
+    "symptoms": [
+      "White to grayish cottony patches on leaves and stems",
+      "Foliar yellowing",
+      "Black speck cleistothecia in mature mats"
+    ],
+    "description": "Caused by Blumeria graminis f. sp. tritici, reducing photosynthetic surface area in dense stands."
+  },
+  "42": {
+    "id": 42,
+    "raw_key": "Wheat___Wheat_Leaf_Blight",
+    "name": "Wheat Leaf Blight",
+    "crop": "Wheat",
+    "status": "Diseased",
+    "symptoms": [
+      "Tan to brown necrotic spots with chlorotic halos",
+      "Pycnidia specks within lesions",
+      "Extensive leaf drying"
+    ],
+    "description": "Caused by Zymoseptoria tritici and Bipolaris sorokiniana affecting flag leaves."
+  },
+  "43": {
+    "id": 43,
+    "raw_key": "Wheat___Wheat_Healthy",
+    "name": "Wheat Healthy",
+    "crop": "Wheat",
+    "status": "Healthy",
+    "symptoms": [
+      "Erect vibrant green tillers",
+      "Uniform clean leaf blades",
+      "Strong photosynthetic capacity"
+    ],
+    "description": "Optimal healthy wheat canopy ready for robust heading and grain filling."
+  },
+  "44": {
+    "id": 44,
+    "raw_key": "Rice___Rice_Blast",
+    "name": "Rice Blast",
+    "crop": "Rice",
+    "status": "Diseased",
+    "symptoms": [
+      "Spindle-shaped or diamond-shaped lesions with gray-white centers and brown margins",
+      "Neck and node rot",
+      "Empty panicles"
+    ],
+    "description": "Caused by Magnaporthe oryzae, the most devastating fungal disease of cultivated rice worldwide."
+  },
+  "45": {
+    "id": 45,
+    "raw_key": "Rice___Rice_Brown_Spot",
+    "name": "Rice Brown Spot",
+    "crop": "Rice",
+    "status": "Diseased",
+    "symptoms": [
+      "Small circular to oval brown spots with yellowish halo",
+      "Seed discoloration",
+      "Seedling blight"
+    ],
+    "description": "Caused by Bipolaris oryzae, historically associated with severe famine in nutrient-deficient soils."
+  },
+  "46": {
+    "id": 46,
+    "raw_key": "Rice___Rice_Bacterial_Leaf_Blight",
+    "name": "Rice Bacterial Leaf Blight",
+    "crop": "Rice",
+    "status": "Diseased",
+    "symptoms": [
+      "Water-soaked to yellowish wavy stripes along leaf margins",
+      "Bacterial ooze droplets in high humidity",
+      "Kresek wilt in seedlings"
+    ],
+    "description": "Severe vascular disease caused by Xanthomonas oryzae pv. oryzae causing extensive lodging and grain loss."
+  },
+  "47": {
+    "id": 47,
+    "raw_key": "Rice___Rice_Sheath_Blight",
+    "name": "Rice Sheath Blight",
+    "crop": "Rice",
+    "status": "Diseased",
+    "symptoms": [
+      "Oval greenish-gray water-soaked lesions on leaf sheaths",
+      "Serpentine banded necrotic blotches",
+      "Canopy collapse"
+    ],
+    "description": "Fungal disease caused by Rhizoctonia solani spreading rapidly in warm, dense flooded paddies."
+  },
+  "48": {
+    "id": 48,
+    "raw_key": "Rice___Rice_Healthy",
+    "name": "Rice Healthy",
+    "crop": "Rice",
+    "status": "Healthy",
+    "symptoms": [
+      "Vibrant green paddy blades",
+      "Clean leaf collars and sheaths",
+      "Sturdy tillers"
+    ],
+    "description": "Healthy rice crop foliage with optimal photosynthetic rate and tiller development."
   }
 }
