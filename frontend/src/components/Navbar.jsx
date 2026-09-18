@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Sprout, Activity, History, CloudSun, Cpu, GitCompare, ChevronRight, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { Sprout, Activity, History, CloudSun, Cpu, GitCompare, ChevronRight, ShieldCheck, AlertTriangle, Sparkles } from 'lucide-react';
 import { apiService } from '../services/api';
 
 export default function Navbar() {
@@ -25,6 +25,7 @@ export default function Navbar() {
   const navLinks = [
     { path: '/', label: 'Home', icon: Sprout },
     { path: '/analyze', label: 'Analyze Crop', icon: Activity },
+    { path: '/results', label: 'Results', icon: Sparkles },
     { path: '/history', label: 'Farm History', icon: History },
     { path: '/compare', label: 'Compare', icon: GitCompare },
     { path: '/weather', label: 'Weather Hub', icon: CloudSun },
@@ -115,13 +116,23 @@ export default function Navbar() {
             )}
           </Link>
 
-          <Link
-            to="/analyze"
-            className="hidden sm:flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold text-sm shadow-lg shadow-emerald-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <span>Analyze</span>
-            <ChevronRight className="w-4 h-4" />
-          </Link>
+          {location.pathname === '/analyze' ? (
+            <Link
+              to="/results"
+              className="hidden sm:flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-emerald-400 font-semibold text-sm border border-emerald-500/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <Sparkles className="w-4 h-4 text-emerald-400" />
+              <span>View Results</span>
+            </Link>
+          ) : (
+            <Link
+              to="/analyze"
+              className="hidden sm:flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-semibold text-sm shadow-lg shadow-emerald-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <span>Analyze Crop</span>
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          )}
         </div>
       </div>
     </header>

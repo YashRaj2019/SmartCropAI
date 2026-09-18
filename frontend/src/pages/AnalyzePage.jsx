@@ -1,38 +1,67 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Sprout, Sliders, Play, RotateCcw, AlertTriangle, ShieldCheck, Thermometer, Droplets, Wind, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Sprout, Sliders, Play, RotateCcw, AlertTriangle, ShieldCheck, Thermometer, Droplets, Wind, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
 import ImageUploader from '../components/ImageUploader';
 import ProcessingModal from '../components/ProcessingModal';
 import { apiService } from '../services/api';
 
+const DEFAULT_FORM = {
+  crop_type: 'Potato',
+  crop_variety: 'Kufri Jyoti',
+  growth_stage: 'Vegetative',
+  sowing_date: '2025-02-15',
+  location: 'Central Valley',
+  season: 'Monsoon',
+  
+  soil_type: 'Loam',
+  soil_ph: 6.5,
+  nitrogen: 140,
+  phosphorus: 60,
+  potassium: 50,
+  soil_moisture: 45,
+
+  temperature: 24.5,
+  humidity: 65,
+  rainfall: 120,
+  wind_speed: 12,
+  irrigation_type: 'Drip'
+};
+
 export default function AnalyzePage() {
   const navigate = useNavigate();
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(() => {
+    try {
+      return localStorage.getItem('smartcrop_saved_image') || null;
+    } catch {
+      return null;
+    }
+  });
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-
-  // Form State
-  const [formData, setFormData] = useState({
-    crop_type: 'Potato',
-    crop_variety: 'Kufri Jyoti',
-    growth_stage: 'Vegetative',
-    sowing_date: '2025-02-15',
-    location: 'Central Valley',
-    season: 'Monsoon',
-    
-    soil_type: 'Loam',
-    soil_ph: 6.5,
-    nitrogen: 140,
-    phosphorus: 60,
-    potassium: 50,
-    soil_moisture: 45,
-
-    temperature: 24.5,
-    humidity: 65,
-    rainfall: 120,
-    wind_speed: 12,
-    irrigation_type: 'Drip'
+  const [hasSavedAnalysis, setHasSavedAnalysis] = useState(() => {
+    try {
+      return Boolean(localStorage.getItem('smartcrop_latest_analysis'));
+    } catch {
+      return false;
+    }
   });
+
+  // Form State initialized from localStorage if available
+  const [formData, setFormData] = useState(() => {
+    try {
+      const saved = localStorage.getItem('smartcrop_form_data');
+      return saved ? JSON.parse(saved) : DEFAULT_FORM;
+    } catch {
+      return DEFAULT_FORM;
+    }
+  });
+
+  // Save changes to localStorage so switching pages never loses user input
+  useEffect(() => {
+    try {
+      localStorage.setItem('smartcrop_form_data', JSON.stringify(formData));
+    } catch {}
+  }, [formData]);
 
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
@@ -40,6 +69,29 @@ export default function AnalyzePage() {
       ...prev,
       [name]: type === 'number' || type === 'range' ? parseFloat(value) : value
     }));
+  };
+
+  const handleImageSelect = (fileOrUrl) => {
+    setSelectedImage(fileOrUrl);
+    try {
+      if (typeof fileOrUrl === 'string') {
+        localStorage.setItem('smartcrop_saved_image', fileOrUrl);
+      }
+    } catch {}
+  };
+
+  const handleClearImage = () => {
+    setSelectedImage(null);
+    try {
+      localStorage.removeItem('smartcrop_saved_image');
+    } catch {}
+  };
+
+  const resetToDefaults = () => {
+    setFormData(DEFAULT_FORM);
+    try {
+      localStorage.setItem('smartcrop_form_data', JSON.stringify(DEFAULT_FORM));
+    } catch {}
   };
 
   // Scenario Presets
@@ -108,34 +160,69 @@ export default function AnalyzePage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setErrorMessage(null);
     setIsProcessing(true);
 
     try {
       // Call Composite Full Analysis API
       const result = await apiService.analyzeCrop(selectedImage, formData);
-      // Wait slightly so user sees the modal step sequence
+      
+      // Persist analysis immediately into localStorage
+      try {
+        localStorage.setItem('smartcrop_latest_analysis', JSON.stringify(result));
+        setHasSavedAnalysis(true);
+      } catch {}
+
+      // Smooth progress animation completion
       setTimeout(() => {
         setIsProcessing(false);
         navigate('/results', { state: { analysis: result, imagePreview: selectedImage } });
-      }, 3500);
+      }, 1200);
     } catch (err) {
       console.error("Analysis API failed:", err);
       setIsProcessing(false);
-      const msg = err.response?.data?.error?.message || err.message || "Failed to complete crop analysis.";
+      const msg = err.response?.data?.detail?.message || err.response?.data?.error?.message || err.message || "Failed to complete crop analysis.";
       setErrorMessage(msg);
     }
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      {/* Active Analysis Shortcut Banner */}
+      {hasSavedAnalysis && (
+        <div className="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-between gap-3 text-xs text-emerald-200">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <span>You have an active crop analysis report ready to view.</span>
+          </div>
+          <Link
+            to="/results"
+            className="flex items-center gap-1 font-bold text-emerald-400 hover:text-emerald-300 transition-colors whitespace-nowrap"
+          >
+            <span>View Results</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
+
       {/* Header */}
       <div className="space-y-2 text-center sm:text-left">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-3">
-          <span>Crop Analysis & Diagnostic Center</span>
-          <Sparkles className="w-6 h-6 text-emerald-400" />
-        </h1>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-3">
+            <span>Crop Analysis & Diagnostic Center</span>
+            <Sparkles className="w-6 h-6 text-emerald-400" />
+          </h1>
+          <button
+            type="button"
+            onClick={resetToDefaults}
+            className="self-end sm:self-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 hover:text-white text-xs transition-colors cursor-pointer"
+            title="Reset form values to default baseline"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Reset Defaults</span>
+          </button>
+        </div>
         <p className="text-xs sm:text-sm text-slate-300">
           Upload a crop leaf photograph and adjust environmental metrics for full-stack deep learning disease diagnosis, XGBoost yield regression, and risk assessment.
         </p>
@@ -148,21 +235,21 @@ export default function AnalyzePage() {
           <button
             type="button"
             onClick={() => loadPreset('potato_blight')}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-emerald-400 border border-slate-700 transition-colors"
+            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-emerald-400 border border-slate-700 transition-colors cursor-pointer"
           >
             Potato Late Blight Risk
           </button>
           <button
             type="button"
             onClick={() => loadPreset('tomato_heat')}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-amber-400 border border-slate-700 transition-colors"
+            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-amber-400 border border-slate-700 transition-colors cursor-pointer"
           >
             Tomato Heat & Drought
           </button>
           <button
             type="button"
             onClick={() => loadPreset('corn_high_yield')}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-teal-400 border border-slate-700 transition-colors"
+            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-teal-400 border border-slate-700 transition-colors cursor-pointer"
           >
             Optimal High Yield Corn
           </button>
@@ -182,9 +269,33 @@ export default function AnalyzePage() {
         <div className="glass-card p-6 sm:p-8 rounded-2xl border border-slate-800/80 space-y-4">
           <ImageUploader
             selectedImage={selectedImage}
-            onImageSelect={(file) => setSelectedImage(file)}
-            onClearImage={() => setSelectedImage(null)}
+            onImageSelect={handleImageSelect}
+            onClearImage={handleClearImage}
           />
+
+          {/* Quick Action Bar under Image */}
+          {selectedImage && (
+            <div className="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 bg-emerald-950/20 p-4 rounded-xl border border-emerald-500/20">
+              <div className="text-left">
+                <p className="text-xs font-bold text-white flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Leaf Image Ready for Inference</span>
+                </p>
+                <p className="text-[11px] text-slate-400">
+                  Click to run immediate diagnosis with current farm telemetry, or customize metrics below.
+                </p>
+              </div>
+              <button
+                type="button"
+                disabled={isProcessing}
+                onClick={() => handleSubmit()}
+                className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 disabled:opacity-50 text-slate-950 font-extrabold text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+              >
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>Run Diagnostics Now</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Section 2: Farm & Crop Metadata */}

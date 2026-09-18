@@ -13,94 +13,49 @@ export default function ResultsPage() {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('disease');
 
-  // Fallback demo data if navigated directly
-  const analysisData = location.state?.analysis || {
-    id: "demo-eval-101",
-    timestamp: new Date().toISOString(),
-    model_type: "production",
-    farm_inputs: {
-      crop_type: "Potato",
-      crop_variety: "Kufri Jyoti",
-      growth_stage: "Vegetative",
-      temperature: 24.5,
-      humidity: 65,
-      rainfall: 120,
-      soil_ph: 6.5,
-      nitrogen: 140,
-      phosphorus: 60,
-      potassium: 50,
-      soil_moisture: 45
-    },
-    disease_analysis: {
-      model_type: "production",
-      model_name: "EfficientNet-B0",
-      model_version: "1.0.0",
-      disease: "Potato Late Blight",
-      confidence: 0.94,
-      symptoms: ["Irregular water-soaked lesions", "White fungal growth on lower leaf surface", "Dark leaf tip necrosis"],
-      alternatives: [
-        { label: "Potato Late Blight", probability: 0.94 },
-        { label: "Potato Early Blight", probability: 0.04 },
-        { label: "Potato Healthy", probability: 0.02 }
-      ],
-      image_quality: { score: 0.92, status: "Good", resolution: "1920x1080", brightness: "Optimal" },
-      gradcam_url: null
-    },
-    yield_analysis: {
-      model_type: "production",
-      model_name: "XGBoostRegressor",
-      model_version: "1.0.0",
-      predicted_yield: 3.85,
-      unit: "tons/hectare",
-      lower_bound: 3.42,
-      upper_bound: 4.28,
-      confidence: 0.91,
-      feature_importance: [
-        { feature: "rainfall", importance: 0.32, direction: "positive" },
-        { feature: "nitrogen", importance: 0.28, direction: "positive" },
-        { feature: "temperature", importance: 0.22, direction: "negative" },
-        { feature: "soil_ph", importance: 0.18, direction: "positive" }
-      ]
-    },
-    risk_analysis: {
-      model_type: "production",
-      model_name: "XGBoostClassifier",
-      model_version: "1.0.0",
-      risk_score: 72,
-      risk_level: "HIGH",
-      components: {
-        disease_risk: 85,
-        weather_risk: 68,
-        soil_risk: 42,
-        environmental_stress: 55
-      },
-      explanation: "High disease probability combined with elevated humidity creates favorable conditions for rapid sporangia dispersal."
-    },
-    recommendations: [
-      {
-        priority: "HIGH",
-        category: "Pathogen Prevention",
-        action: "Inspect foliage for Late Blight lesions and apply protective copper or bio-fungicide.",
-        timeframe: "Within 24 to 48 hours",
-        reason: "Fungal spores proliferate rapidly in cool, humid micro-climates.",
-        safety_note: "Consult certified agricultural extension officers before applying fungicides.",
-        knowledge_ref: "FAO Crop Protection Standards - Sec 4.2"
-      },
-      {
-        priority: "MEDIUM",
-        category: "Soil Conditioning",
-        action: "Apply organic compost to adjust soil pH closer to 6.5.",
-        timeframe: "Next irrigation cycle",
-        reason: "Slightly acidic soil optimizes phosphorus availability.",
-        safety_note: "Test soil moisture prior to amendment application.",
-        knowledge_ref: "Soil Science Society Guidelines"
-      }
-    ],
-    crop_health_score: 68
-  };
+  // Load from location.state or fallback to localStorage
+  const [analysisData, setAnalysisData] = useState(() => {
+    if (location.state?.analysis) {
+      try {
+        localStorage.setItem('smartcrop_latest_analysis', JSON.stringify(location.state.analysis));
+      } catch {}
+      return location.state.analysis;
+    }
+    try {
+      const saved = localStorage.getItem('smartcrop_latest_analysis');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return null;
+  });
+
+  if (!analysisData) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-20 text-center space-y-6">
+        <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400">
+          <Activity className="w-8 h-8" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-extrabold text-white">No Active Crop Diagnostics Found</h2>
+          <p className="text-sm text-slate-400 max-w-md mx-auto">
+            You haven't executed a crop evaluation yet. Head to the Diagnostic Center to upload a leaf photo or paste an image link to generate real-time AI predictions.
+          </p>
+        </div>
+        <div className="pt-2">
+          <Link
+            to="/analyze"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all hover:scale-105"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Launch Crop Diagnostic Center</span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const { disease_analysis, yield_analysis, risk_analysis, farm_inputs, recommendations, crop_health_score } = analysisData;
   const isProduction = analysisData.model_type === 'production';
+  const displayImage = location.state?.imagePreview || analysisData.image_url || localStorage.getItem('smartcrop_saved_image');
 
   const downloadReport = () => {
     const reportUrl = apiService.getReportUrl(analysisData.id);
@@ -250,14 +205,24 @@ export default function ResultsPage() {
                   <span>Primary Disease Diagnosis</span>
                 </h3>
 
-                <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-emerald-400">{disease_analysis.disease}</span>
-                    <span className="text-xs font-extrabold px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
-                      {Math.round(disease_analysis.confidence * 100)}% Confidence
-                    </span>
+                <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    {displayImage && (
+                      <div className="w-20 h-20 rounded-xl overflow-hidden border border-slate-700 bg-slate-950 flex-shrink-0">
+                        <img src={displayImage} alt="Diagnosed leaf" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="flex-1 space-y-1">
+                      <div className="flex justify-between items-center">
+                        <span className="text-lg font-bold text-emerald-400">{disease_analysis.disease}</span>
+                        <span className="text-xs font-extrabold px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+                          {Math.round(disease_analysis.confidence * 100)}% Confidence
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-300">Model: {disease_analysis.model_name} ({disease_analysis.model_version})</p>
+                      <p className="text-[11px] text-slate-400">Target Crop: {farm_inputs?.crop_type || 'Crop'} ({farm_inputs?.crop_variety || 'Variety'})</p>
+                    </div>
                   </div>
-                  <p className="text-xs text-slate-300">Model: {disease_analysis.model_name} ({disease_analysis.model_version})</p>
                 </div>
 
                 <div className="space-y-2">
@@ -299,7 +264,7 @@ export default function ResultsPage() {
           {/* TAB 2: Explainable AI */}
           {activeTab === 'xai' && (
             <XAIExplanationPanel
-              originalImage={location.state?.imagePreview}
+              originalImage={displayImage}
               gradcamUrl={disease_analysis.gradcam_url}
               featureImportance={yield_analysis.feature_importance}
             />

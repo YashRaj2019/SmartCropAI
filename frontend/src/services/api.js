@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const getBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return `${window.location.origin}/api`;
+  }
+  return 'http://localhost:8000/api';
+};
+
+const API_BASE_URL = getBaseUrl();
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -11,10 +19,14 @@ const api = axios.create({
 
 export const apiService = {
   // Full composite crop analysis
-  analyzeCrop: async (imageFile, farmInputs) => {
+  analyzeCrop: async (imageFileOrUrl, farmInputs) => {
     const formData = new FormData();
-    if (imageFile) {
-      formData.append('image', imageFile);
+    if (imageFileOrUrl) {
+      if (typeof imageFileOrUrl === 'string') {
+        formData.append('image_url', imageFileOrUrl);
+      } else {
+        formData.append('image', imageFileOrUrl);
+      }
     }
     formData.append('farm_inputs_json', JSON.stringify(farmInputs));
 
@@ -27,10 +39,14 @@ export const apiService = {
   },
 
   // Standalone disease prediction
-  predictDisease: async (imageFile, cropType) => {
+  predictDisease: async (imageFileOrUrl, cropType) => {
     const formData = new FormData();
-    if (imageFile) {
-      formData.append('image', imageFile);
+    if (imageFileOrUrl) {
+      if (typeof imageFileOrUrl === 'string') {
+        formData.append('image_url', imageFileOrUrl);
+      } else {
+        formData.append('image', imageFileOrUrl);
+      }
     }
     formData.append('crop_type', cropType);
 

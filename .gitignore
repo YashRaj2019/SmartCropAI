@@ -56,3 +56,4 @@ storage/uploads/*
 storage/gradcam/*
 !storage/gradcam/.gitkeep
 storage/*.pdf
+storage/db_history.json

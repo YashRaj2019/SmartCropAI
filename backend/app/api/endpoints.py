@@ -1,7 +1,9 @@
 import os
+import io
 import json
 import uuid
 import asyncio
+import httpx
 from typing import Optional
 from fastapi import APIRouter, File, UploadFile, Form, HTTPException, Query, Response
 from fastapi.responses import FileResponse, JSONResponse
@@ -17,6 +19,68 @@ from backend.app.services.history_service import history_service
 from backend.app.services.report_service import PDFReportGenerator
 
 router = APIRouter()
+
+async def _resolve_image_input(image: Optional[UploadFile], image_url: Optional[str]) -> Optional[str]:
+    """Helper to resolve an uploaded file or an online image URL into a local verified image path."""
+    if image:
+        if not image.content_type.startswith("image/"):
+            raise HTTPException(
+                status_code=400,
+                detail={"code": "INVALID_IMAGE", "message": "File provided is not a valid image.", "details": "Accepted formats: JPG, PNG, WEBP"}
+            )
+        file_ext = os.path.splitext(image.filename)[1] or ".jpg"
+        temp_filename = f"upload_{uuid.uuid4()}{file_ext}"
+        temp_image_path = os.path.join(settings.UPLOADS_DIR, temp_filename)
+        content = await image.read()
+        with open(temp_image_path, "wb") as f:
+            f.write(content)
+        return temp_image_path
+
+    if image_url and image_url.strip():
+        clean_url = image_url.strip()
+        try:
+            if clean_url.startswith("data:image/") and ";base64," in clean_url:
+                import base64
+                header, base64_data = clean_url.split(";base64,", 1)
+                content = base64.b64decode(base64_data)
+            else:
+                headers = {
+                    "User-Agent": "SmartCropAI/1.0 (https://smartcrop.ai; contact@smartcrop.ai) Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+                    "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8"
+                }
+                async with httpx.AsyncClient(timeout=15.0, follow_redirects=True, headers=headers) as client:
+                    resp = await client.get(clean_url)
+                    if resp.status_code != 200:
+                        raise HTTPException(
+                            status_code=400,
+                            detail={"code": "IMAGE_URL_ERROR", "message": f"Failed to download image from URL (HTTP {resp.status_code})."}
+                        )
+                    content = resp.content
+            
+            # Verify that it's a valid readable image via PIL
+            try:
+                img_check = Image.open(io.BytesIO(content))
+                img_check.verify()
+            except Exception:
+                raise HTTPException(
+                    status_code=400,
+                    detail={"code": "INVALID_IMAGE", "message": "The provided URL does not point to a valid image format."}
+                )
+
+            temp_filename = f"url_{uuid.uuid4()}.jpg"
+            temp_image_path = os.path.join(settings.UPLOADS_DIR, temp_filename)
+            with open(temp_image_path, "wb") as f:
+                f.write(content)
+            return temp_image_path
+        except HTTPException:
+            raise
+        except Exception as e:
+            raise HTTPException(
+                status_code=400,
+                detail={"code": "IMAGE_URL_ERROR", "message": f"Error fetching image from URL: {str(e)}"}
+            )
+
+    return None
 
 @router.get("/health")
 def health_check():
@@ -37,11 +101,12 @@ def get_models_metadata():
 @router.post("/analyze")
 async def analyze_crop(
     image: Optional[UploadFile] = File(None),
+    image_url: Optional[str] = Form(None),
     farm_inputs_json: str = Form(...)
 ):
     """
     Composite full-stack ML evaluation endpoint.
-    Processes leaf image + farm inputs, runs disease classifier, Grad-CAM, yield regressor, risk classifier & recommendation engine.
+    Processes leaf image (file or URL) + farm inputs, runs disease classifier, Grad-CAM, yield regressor, risk classifier & recommendation engine.
     """
     try:
         inputs_dict = json.loads(farm_inputs_json)
@@ -51,22 +116,8 @@ async def analyze_crop(
             detail={"code": "INVALID_JSON", "message": "The farm inputs JSON payload is malformed."}
         )
 
-    # Validate image or save temporary upload
-    temp_image_path = None
-    if image:
-        if not image.content_type.startswith("image/"):
-            raise HTTPException(
-                status_code=400,
-                detail={"code": "INVALID_IMAGE", "message": "File provided is not a valid image.", "details": "Accepted formats: JPG, PNG, WEBP"}
-            )
-        
-        file_ext = os.path.splitext(image.filename)[1] or ".jpg"
-        temp_filename = f"upload_{uuid.uuid4()}{file_ext}"
-        temp_image_path = os.path.join(settings.UPLOADS_DIR, temp_filename)
-        
-        content = await image.read()
-        with open(temp_image_path, "wb") as f:
-            f.write(content)
+    # 0. Resolve image from file upload or online URL
+    temp_image_path = await _resolve_image_input(image, image_url)
 
     # 1. Run Disease Model
     disease_input = {"image": temp_image_path, "crop_type": inputs_dict.get("crop_type", "Potato")}
@@ -114,17 +165,11 @@ async def analyze_crop(
 @router.post("/disease/predict")
 async def predict_disease(
     image: Optional[UploadFile] = File(None),
+    image_url: Optional[str] = Form(None),
     crop_type: str = Form("Potato")
 ):
     """Standalone crop disease prediction endpoint."""
-    temp_image_path = None
-    if image:
-        file_ext = os.path.splitext(image.filename)[1] or ".jpg"
-        temp_image_path = os.path.join(settings.UPLOADS_DIR, f"disease_{uuid.uuid4()}{file_ext}")
-        content = await image.read()
-        with open(temp_image_path, "wb") as f:
-            f.write(content)
-
+    temp_image_path = await _resolve_image_input(image, image_url)
     disease_res = await asyncio.to_thread(model_registry.disease_service.predict, {"image": temp_image_path, "crop_type": crop_type})
     gradcam_res = await asyncio.to_thread(model_registry.disease_service.explain, {"image": temp_image_path, "crop_type": crop_type})
     disease_res["gradcam_url"] = f"/storage/gradcam/{os.path.basename(gradcam_res['heatmap_path'])}"
