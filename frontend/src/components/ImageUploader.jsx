@@ -4,14 +4,17 @@ import { UploadCloud, Link as LinkIcon, Image as ImageIcon, X, AlertCircle, Chec
 const SAMPLE_URLS = [
   {
     name: 'Potato Leaf (Late Blight)',
+    crop: 'Potato',
     url: 'https://upload.wikimedia.org/wikipedia/commons/a/aa/Late_blight_on_potato_leaf_2.jpg',
   },
   {
     name: 'Tomato Leaf (Foliage)',
+    crop: 'Tomato',
     url: 'https://upload.wikimedia.org/wikipedia/commons/8/89/Tomato_je.jpg',
   },
   {
     name: 'Corn Foliage (Rust Leaf)',
+    crop: 'Corn',
     url: 'https://raw.githubusercontent.com/spMohanty/PlantVillage-Dataset/master/raw/color/Corn_(maize)___Common_rust_/RS_Rust%201563.JPG',
   },
 ];
@@ -24,6 +27,14 @@ export default function ImageUploader({ selectedImage, onImageSelect, onClearIma
   const [urlLoading, setUrlLoading] = useState(false);
   const [urlError, setUrlError] = useState(null);
   const inputRef = useRef(null);
+
+  React.useEffect(() => {
+    if (!selectedImage) {
+      setPreviewUrl(null);
+    } else if (typeof selectedImage === 'string') {
+      setPreviewUrl(selectedImage);
+    }
+  }, [selectedImage]);
 
   const handleFiles = (files) => {
     if (files && files[0]) {
@@ -65,7 +76,7 @@ export default function ImageUploader({ selectedImage, onImageSelect, onClearIma
     }
   };
 
-  const handleLoadUrl = (urlToLoad) => {
+  const handleLoadUrl = (urlToLoad, cropMeta = null) => {
     const targetUrl = (urlToLoad || urlInput).trim();
     if (!targetUrl) {
       setUrlError('Please enter a valid image URL.');
@@ -80,7 +91,7 @@ export default function ImageUploader({ selectedImage, onImageSelect, onClearIma
     img.onload = () => {
       setUrlLoading(false);
       setPreviewUrl(targetUrl);
-      onImageSelect(targetUrl);
+      onImageSelect(targetUrl, cropMeta);
     };
     img.onerror = () => {
       setUrlLoading(false);
@@ -238,9 +249,9 @@ export default function ImageUploader({ selectedImage, onImageSelect, onClearIma
                     type="button"
                     onClick={() => {
                       setUrlInput(sample.url);
-                      handleLoadUrl(sample.url);
+                      handleLoadUrl(sample.url, sample.crop);
                     }}
-                    className="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border border-slate-700 text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                    className="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border border-slate-700 text-xs flex items-center gap-1.5 transition-colors cursor-pointer hover:border-emerald-500/50"
                   >
                     <span>🌱</span>
                     <span>{sample.name}</span>

@@ -29,13 +29,8 @@ const DEFAULT_FORM = {
 
 export default function AnalyzePage() {
   const navigate = useNavigate();
-  const [selectedImage, setSelectedImage] = useState(() => {
-    try {
-      return localStorage.getItem('smartcrop_saved_image') || null;
-    } catch {
-      return null;
-    }
-  });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [hasSavedAnalysis, setHasSavedAnalysis] = useState(() => {
@@ -71,25 +66,49 @@ export default function AnalyzePage() {
     }));
   };
 
-  const handleImageSelect = (fileOrUrl) => {
+  const handleImageSelect = (fileOrUrl, sampleCrop = null) => {
     setSelectedImage(fileOrUrl);
-    try {
-      if (typeof fileOrUrl === 'string') {
+    setErrorMessage(null);
+    if (sampleCrop) {
+      setFormData(prev => ({
+        ...prev,
+        crop_type: sampleCrop
+      }));
+    }
+    if (typeof fileOrUrl === 'string') {
+      setPreviewUrl(fileOrUrl);
+      try {
         localStorage.setItem('smartcrop_saved_image', fileOrUrl);
-      }
-    } catch {}
+      } catch {}
+    } else if (fileOrUrl instanceof File) {
+      const objectUrl = URL.createObjectURL(fileOrUrl);
+      setPreviewUrl(objectUrl);
+      try {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          try {
+            localStorage.setItem('smartcrop_saved_image', reader.result);
+          } catch {}
+        };
+        reader.readAsDataURL(fileOrUrl);
+      } catch {}
+    }
   };
 
   const handleClearImage = () => {
     setSelectedImage(null);
+    setPreviewUrl(null);
     try {
       localStorage.removeItem('smartcrop_saved_image');
     } catch {}
   };
 
   const resetToDefaults = () => {
+    setSelectedImage(null);
+    setPreviewUrl(null);
     setFormData(DEFAULT_FORM);
     try {
+      localStorage.removeItem('smartcrop_saved_image');
       localStorage.setItem('smartcrop_form_data', JSON.stringify(DEFAULT_FORM));
     } catch {}
   };
@@ -161,6 +180,10 @@ export default function AnalyzePage() {
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
+    if (!selectedImage) {
+      setErrorMessage("Please select or upload a crop leaf image before starting the diagnosis.");
+      return;
+    }
     setErrorMessage(null);
     setIsProcessing(true);
 
@@ -168,17 +191,23 @@ export default function AnalyzePage() {
       // Call Composite Full Analysis API
       const result = await apiService.analyzeCrop(selectedImage, formData);
       
+      // Determine display image string to pass to Results
+      const displayImg = previewUrl || (typeof selectedImage === 'string' ? selectedImage : null) || result.image_url;
+
       // Persist analysis immediately into localStorage
       try {
         localStorage.setItem('smartcrop_latest_analysis', JSON.stringify(result));
+        if (displayImg) {
+          localStorage.setItem('smartcrop_saved_image', displayImg);
+        }
         setHasSavedAnalysis(true);
       } catch {}
 
       // Smooth progress animation completion
       setTimeout(() => {
         setIsProcessing(false);
-        navigate('/results', { state: { analysis: result, imagePreview: selectedImage } });
-      }, 1200);
+        navigate('/results', { state: { analysis: result, imagePreview: displayImg } });
+      }, 800);
     } catch (err) {
       console.error("Analysis API failed:", err);
       setIsProcessing(false);

@@ -57,6 +57,13 @@ export const apiService = {
     localStorage.removeItem('smartcrop_auth_token');
     localStorage.removeItem('smartcrop_user');
   },
+
+  getImageUrl: (path) => {
+    if (!path) return null;
+    if (path.startsWith('http') || path.startsWith('data:') || path.startsWith('blob:')) return path;
+    const base = API_BASE_URL.replace(/\/api\/?$/, '');
+    return `${base}${path.startsWith('/') ? path : '/' + path}`;
+  },
   // Full composite crop analysis
   analyzeCrop: async (imageFileOrUrl, farmInputs) => {
     const formData = new FormData();

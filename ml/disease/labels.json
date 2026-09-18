@@ -10,7 +10,13 @@
       "Distorted leaf growth",
       "Premature leaf drop"
     ],
-    "description": "Fungal disease caused by Venturia inaequalis leading to dark scabby lesions on leaves and fruit."
+    "description": "Fungal disease caused by Venturia inaequalis leading to dark scabby lesions on leaves and fruit.",
+    "solution": {
+      "immediate_action": "Prune and destroy infected leaves and twigs; avoid overhead irrigation.",
+      "organic": "Apply liquid copper soap, wettable sulfur, or Bacillus subtilis sprays during bud break.",
+      "chemical": "Apply protective fungicides containing Captan, Mancozeb, or Difenoconazole at 7-10 day intervals.",
+      "cultural": "Rake and destroy fallen leaves in autumn; prune tree canopy to optimize airflow and sunlight."
+    }
   },
   "1": {
     "id": 1,
@@ -23,7 +29,13 @@
       "Black necrotic fruit rot",
       "Bark cankers"
     ],
-    "description": "Caused by the fungus Botryosphaeria obtusa, causing defoliation and severe fruit rotting."
+    "description": "Caused by the fungus Botryosphaeria obtusa, causing defoliation and severe fruit rotting.",
+    "solution": {
+      "immediate_action": "Remove mummified fruit and prune out cankered twigs 6-8 inches below visible damage.",
+      "organic": "Apply copper octanoate or sulfur fungicides during dormancy and early leaf development.",
+      "chemical": "Spray Captan or Thiophanate-methyl starting at petal fall through summer cover sprays.",
+      "cultural": "Disinfect pruning shears with 70% alcohol between cuts; burn or bury infected debris."
+    }
   },
   "2": {
     "id": 2,
@@ -36,7 +48,13 @@
       "Small tube-like projections under leaves",
       "Defoliation"
     ],
-    "description": "Fungal disease caused by Gymnosporangium juniperi-virginianae cycling between apples and eastern red cedars."
+    "description": "Fungal disease caused by Gymnosporangium juniperi-virginianae cycling between apples and eastern red cedars.",
+    "solution": {
+      "immediate_action": "Scout for nearby Eastern Red Cedar trees harboring galls and prune affected apple foliage.",
+      "organic": "Apply sulfur or copper-based sprays every 7-10 days from tight cluster until petal fall.",
+      "chemical": "Apply Myclobutanil, Mancozeb, or Propiconazole before anticipated spring rainfall events.",
+      "cultural": "Eradicate wild cedar and juniper trees within 500 feet of the orchard where feasible."
+    }
   },
   "3": {
     "id": 3,
@@ -49,7 +67,13 @@
       "Clean smooth leaf margins",
       "Optimal foliage density"
     ],
-    "description": "Healthy apple foliage with high photosynthetic activity and zero disease symptoms."
+    "description": "Healthy apple foliage with high photosynthetic activity and zero disease symptoms.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Maintain balanced foliar nutrition and organic compost mulching.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Continue routine scouting, balanced drip irrigation, and annual winter pruning."
+    }
   },
   "4": {
     "id": 4,
@@ -62,7 +86,13 @@
       "Robust stem vigor",
       "Zero foliar spotting"
     ],
-    "description": "Healthy blueberry foliage ready for high berry yields."
+    "description": "Healthy blueberry foliage ready for high berry yields.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Maintain acidic soil mulch (pine needles/peat moss) and organic fertilizer.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Maintain soil pH between 4.5 - 5.5 and ensure consistent root zone moisture."
+    }
   },
   "5": {
     "id": 5,
@@ -75,7 +105,13 @@
       "Upward leaf curling",
       "Stunted twig growth"
     ],
-    "description": "Caused by Podosphaera clandestina, damaging foliage and young developing cherries."
+    "description": "Caused by Podosphaera clandestina, damaging foliage and young developing cherries.",
+    "solution": {
+      "immediate_action": "Prune out dense shoot tips showing white fungal mildew to increase air penetration.",
+      "organic": "Spray potassium bicarbonate, neem oil, or horticultural oils in early morning.",
+      "chemical": "Apply Myclobutanil, Triflumizole, or Tebuconazole fungicide at first sign of white mycelium.",
+      "cultural": "Avoid excessive nitrogen fertilization which promotes lush, susceptible succulent growth."
+    }
   },
   "6": {
     "id": 6,
@@ -88,7 +124,13 @@
       "Healthy leaf margins",
       "Strong vegetative development"
     ],
-    "description": "Healthy cherry tree leaves with balanced canopy development."
+    "description": "Healthy cherry tree leaves with balanced canopy development.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Maintain good orchard sanitation and organic micronutrient sprays.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Monitor weekly for aphids and fruit flies; maintain weed-free tree understoreys."
+    }
   },
   "7": {
     "id": 7,
@@ -101,7 +143,13 @@
       "Lesions restricted between leaf veins",
       "Severe leaf blighting"
     ],
-    "description": "Destructive foliar fungal disease caused by Cercospora zeae-maydis reducing kernel fill."
+    "description": "Destructive foliar fungal disease caused by Cercospora zeae-maydis reducing kernel fill.",
+    "solution": {
+      "immediate_action": "Assess lower canopy leaf lesions before tasseling to determine economic spray threshold.",
+      "organic": "Apply Bacillus pumilus bio-fungicides and silicon-based foliar strengthening agents.",
+      "chemical": "Apply Azoxystrobin + Difenoconazole or Pyraclostrobin at first appearance of gray lesions.",
+      "cultural": "Rotate fields with non-host crops (soybean/sunflower); plow under previous crop residues."
+    }
   },
   "8": {
     "id": 8,
@@ -114,7 +162,13 @@
       "Pustules on both leaf surfaces",
       "Premature leaf chlorosis"
     ],
-    "description": "Fungal disease caused by Puccinia sorghi, thriving in cool, moist weather and high humidity."
+    "description": "Fungal disease caused by Puccinia sorghi, thriving in cool, moist weather and high humidity.",
+    "solution": {
+      "immediate_action": "Inspect leaf surfaces for cinnamon-brown pustules, especially under cool, humid conditions.",
+      "organic": "Spray sulfur-based protectants or Trichoderma harzianum bio-agents.",
+      "chemical": "Apply Propiconazole, Tebuconazole, or Pyraclostrobin if pustules reach ear leaves before silking.",
+      "cultural": "Plant rust-resistant hybrids; maintain balanced phosphorus and potassium fertilization."
+    }
   },
   "9": {
     "id": 9,
@@ -127,7 +181,13 @@
       "Lesions turning dark with fungal spores",
       "Extensive leaf necrosis"
     ],
-    "description": "Caused by Setosphaeria turcica, causing substantial loss in grain and silage corn yields."
+    "description": "Caused by Setosphaeria turcica, causing substantial loss in grain and silage corn yields.",
+    "solution": {
+      "immediate_action": "Scout ear leaf and two leaves below for large cigar-shaped lesions during pre-tassel stage.",
+      "organic": "Apply copper oxychloride or bio-fungicides containing Bacillus subtilis.",
+      "chemical": "Apply Strobilurin or Triazole fungicides (e.g. Azoxystrobin, Propiconazole) at early lesion detection.",
+      "cultural": "Incorporate corn stubble thoroughly; adopt a 2-year crop rotation with non-cereal crops."
+    }
   },
   "10": {
     "id": 10,
@@ -140,7 +200,13 @@
       "Smooth texture without lesions",
       "Strong photosynthetic capacity"
     ],
-    "description": "Healthy vigorous corn foliage supporting optimal cob development."
+    "description": "Healthy vigorous corn foliage supporting optimal cob development.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Apply bio-fertilizers (Azotobacter, PSB) and organic soil amendments.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Maintain optimal planting density and adequate nitrogen side-dressing."
+    }
   },
   "11": {
     "id": 11,
@@ -153,7 +219,13 @@
       "Tiny black pycnidia in spots",
       "Shriveled mummified berries"
     ],
-    "description": "Severe fungal disease caused by Guignardia bidwellii affecting vineyard canopies."
+    "description": "Severe fungal disease caused by Guignardia bidwellii affecting vineyard canopies.",
+    "solution": {
+      "immediate_action": "Hand-pick and destroy mummified grapes and infected canes from previous season.",
+      "organic": "Apply copper octanoate or sulfur dusts from budbreak through bloom stage.",
+      "chemical": "Apply Mancozeb, Captan, or Myclobutanil starting at 1-3 inch shoot growth.",
+      "cultural": "Open grapevine canopies by shoot thinning to promote rapid leaf drying after rain."
+    }
   },
   "12": {
     "id": 12,
@@ -166,7 +238,13 @@
       "Interveinal yellowing",
       "Spotted or cracked fruit"
     ],
-    "description": "Complex fungal trunk disease causing sudden apoplexy and foliar tiger-striping."
+    "description": "Complex fungal trunk disease causing sudden apoplexy and foliar tiger-striping.",
+    "solution": {
+      "immediate_action": "Mark infected vines with tiger-stripe leaves for targeted dormant pruning; sanitize pruning tools.",
+      "organic": "Apply Trichoderma atroviride pruning wound protectants immediately following trimming.",
+      "chemical": "Treat pruning wounds with commercial wound sealants containing Thiophanate-methyl.",
+      "cultural": "Prune in late winter during dry weather; avoid making large pruning cuts on old cordon wood."
+    }
   },
   "13": {
     "id": 13,
@@ -179,7 +257,13 @@
       "Premature canopy browning",
       "Early autumn defoliation"
     ],
-    "description": "Foliar fungal infection caused by Pseudocercospora cladosporioides."
+    "description": "Foliar fungal infection caused by Pseudocercospora cladosporioides.",
+    "solution": {
+      "immediate_action": "Prune out dead leaf matter and thin canopy foliage to enhance air movement.",
+      "organic": "Spray copper hydroxide or potassium silicate formulations.",
+      "chemical": "Apply Mancozeb, Copper Oxychloride, or Strobilurin fungicides as per local vineyard schedule.",
+      "cultural": "Collect and burn fallen leaves post-harvest to eliminate overwintering fungal inocula."
+    }
   },
   "14": {
     "id": 14,
@@ -192,7 +276,13 @@
       "Clean veination",
       "Active tendril and canopy growth"
     ],
-    "description": "Healthy grape foliage ensuring optimal sugar accumulation in clusters."
+    "description": "Healthy grape foliage ensuring optimal sugar accumulation in clusters.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Maintain balanced compost tea applications and mycorrhizal root inoculants.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Perform routine canopy leaf pulling around grape clusters to maximize airflow."
+    }
   },
   "15": {
     "id": 15,
@@ -205,7 +295,13 @@
       "Yellowing along veins",
       "Small, lopsided bitter fruit"
     ],
-    "description": "Devastating bacterial disease spread by the Asian citrus psyllid, leading to tree decline."
+    "description": "Devastating bacterial disease spread by the Asian citrus psyllid, leading to tree decline.",
+    "solution": {
+      "immediate_action": "Quarantine suspected trees; test for Candidatus Liberibacter asiaticus and control psyllids.",
+      "organic": "Release predatory Tamarixia radiata wasps; apply horticultural mineral oils against nymphs.",
+      "chemical": "Apply Imidacloprid, Thiamethoxam, or Clothianidin systemic insecticides to eliminate Asian citrus psyllid.",
+      "cultural": "Plant only certified disease-free nursery stock; remove and eradicate declining infected trees."
+    }
   },
   "16": {
     "id": 16,
@@ -218,7 +314,13 @@
       "Shot-hole appearance",
       "Leaf yellowing and drop"
     ],
-    "description": "Bacterial disease caused by Xanthomonas arboricola pv. pruni affecting leaves and fruit."
+    "description": "Bacterial disease caused by Xanthomonas arboricola pv. pruni affecting leaves and fruit.",
+    "solution": {
+      "immediate_action": "Spray copper bactericide during early morning when temperatures are moderate.",
+      "organic": "Apply fixed copper combined with Bacillus subtilis during dormancy and petal fall.",
+      "chemical": "Apply Oxytetracycline (where registered) or copper hydroxide at tight cluster stage.",
+      "cultural": "Avoid excess nitrogen fertilization; plant windbreaks to minimize leaf abrasion from wind."
+    }
   },
   "17": {
     "id": 17,
@@ -231,7 +333,13 @@
       "Smooth unblemished leaf blades",
       "Strong shoot vigor"
     ],
-    "description": "Healthy peach foliage supporting high fruit quality and yield."
+    "description": "Healthy peach foliage supporting high fruit quality and yield.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Maintain balanced organic mulches and foliar calcium sprays for strong cell walls.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Conduct regular canopy thinning to ensure sunlight reaches interior fruiting wood."
+    }
   },
   "18": {
     "id": 18,
@@ -244,7 +352,13 @@
       "Brown spots with pale halos",
       "Severe defoliation"
     ],
-    "description": "Caused by Xanthomonas campestris pv. vesicatoria, severely impacting pepper yields."
+    "description": "Caused by Xanthomonas campestris pv. vesicatoria, severely impacting pepper yields.",
+    "solution": {
+      "immediate_action": "Remove and isolate severely spotted pepper plants; eliminate overhead splashing.",
+      "organic": "Apply copper soap or Streptomyces-based bio-fungicides every 7 days during warm, rainy periods.",
+      "chemical": "Spray copper hydroxide mixed with Mancozeb to overcome bacterial copper resistance.",
+      "cultural": "Use certified disease-free seed; practice 3-year crop rotation avoiding Solanaceous plants."
+    }
   },
   "19": {
     "id": 19,
@@ -257,7 +371,13 @@
       "Uniform leaf texture",
       "Active flower bud formation"
     ],
-    "description": "Healthy pepper plant foliage with strong disease resistance."
+    "description": "Healthy pepper plant foliage with strong disease resistance.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Maintain balanced organic NPK nutrition and foliar kelp extract.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Maintain drip irrigation and plastic mulch to prevent soil-borne pathogen splash."
+    }
   },
   "20": {
     "id": 20,
@@ -270,7 +390,13 @@
       "Target-spot pattern",
       "Yellow halo surrounding lesions"
     ],
-    "description": "Fungal disease caused by Alternaria solani affecting older leaves first and reducing tuber bulking."
+    "description": "Fungal disease caused by Alternaria solani affecting older leaves first and reducing tuber bulking.",
+    "solution": {
+      "immediate_action": "Prune lower diseased potato leaves showing concentric target spots.",
+      "organic": "Spray copper-based fungicides or bio-fungicide Bacillus amyloliquefaciens on lower leaves.",
+      "chemical": "Apply Chlorothalonil, Mancozeb, or Azoxystrobin on a 7-14 day preventive schedule.",
+      "cultural": "Implement drip irrigation; maintain plant spacing for air circulation; avoid water stress."
+    }
   },
   "21": {
     "id": 21,
@@ -283,7 +409,13 @@
       "White fungal mold on undersides",
       "Rapid foliage and stem collapse"
     ],
-    "description": "Catastrophic oomycete disease caused by Phytophthora infestans requiring rapid fungicide protection."
+    "description": "Catastrophic oomycete disease caused by Phytophthora infestans requiring rapid fungicide protection.",
+    "solution": {
+      "immediate_action": "CRITICAL: Destroy heavily blighted potato foliage immediately to stop airborne zoospore epidemic.",
+      "organic": "Apply preventative copper hydroxide sprays before high-humidity rain fronts.",
+      "chemical": "Apply systemic fungicides such as Metalaxyl, Cymoxanil, Dimethomorph, or Mandipropamid with Mancozeb.",
+      "cultural": "Plant only certified disease-free seed tubers; eliminate volunteer potato plants; ensure good hilling."
+    }
   },
   "22": {
     "id": 22,
@@ -296,7 +428,13 @@
       "Strong stem turgidity",
       "Optimal tuber canopy cover"
     ],
-    "description": "Healthy potato plants with excellent canopy coverage and zero foliar symptoms."
+    "description": "Healthy potato plants with excellent canopy coverage and zero foliar symptoms.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Apply compost mulches and bio-fertilizers; monitor for aphids and Colorado potato beetles.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Maintain hill soil cover over developing tubers to prevent greening and blight spore wash."
+    }
   },
   "23": {
     "id": 23,
@@ -309,7 +447,13 @@
       "Strong cane growth",
       "Zero viral mottling"
     ],
-    "description": "Healthy raspberry foliage ensuring high berry production."
+    "description": "Healthy raspberry foliage ensuring high berry production.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Maintain wood chip mulching and organic potassium sulfate fertilizing.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Prune old fruited floricanes after harvest; maintain well-trellised rows."
+    }
   },
   "24": {
     "id": 24,
@@ -322,7 +466,13 @@
       "Robust nodulation support",
       "Absence of rust or spots"
     ],
-    "description": "Healthy soybean foliage optimizing nitrogen fixation and pod development."
+    "description": "Healthy soybean foliage optimizing nitrogen fixation and pod development.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Inoculate seed with Bradyrhizobium japonicum; maintain balanced soil phosphorus.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Monitor weekly for defoliating caterpillars and stem borers; maintain clean weed control."
+    }
   },
   "25": {
     "id": 25,
@@ -335,7 +485,13 @@
       "Yellowing underneath fungal mats",
       "Premature leaf death"
     ],
-    "description": "Common foliar disease caused by Podosphaera xanthii covering cucurbit foliage."
+    "description": "Common foliar disease caused by Podosphaera xanthii covering cucurbit foliage.",
+    "solution": {
+      "immediate_action": "Remove heavily mildewed older leaves; spray immediately to protect young leaves and squash fruit.",
+      "organic": "Spray potassium bicarbonate (3g/L), milk solution (1:9 dilution), or neem oil every 5-7 days.",
+      "chemical": "Apply Myclobutanil, Trifloxystrobin, or Quinoxyfen alternating chemical classes.",
+      "cultural": "Plant powdery mildew-resistant cucurbit varieties; avoid planting in shady, humid areas."
+    }
   },
   "26": {
     "id": 26,
@@ -348,7 +504,13 @@
       "Scorch-like leaf margins",
       "Leaf curling and drying"
     ],
-    "description": "Fungal disease caused by Diplocarpon earlianum reducing runner vitality and fruit size."
+    "description": "Fungal disease caused by Diplocarpon earlianum reducing runner vitality and fruit size.",
+    "solution": {
+      "immediate_action": "Remove older infected strawberry leaves showing purple-bordered necrotic lesions.",
+      "organic": "Apply copper octanoate or Bacillus amyloliquefaciens foliar sprays during vegetative growth.",
+      "chemical": "Apply Captan, Thiophanate-methyl, or Myclobutanil at early emergence of spring crown leaves.",
+      "cultural": "Switch from overhead irrigation to drip tape; renovate beds post-harvest and discard old foliage."
+    }
   },
   "27": {
     "id": 27,
@@ -361,7 +523,13 @@
       "Clean crowns and petioles",
       "Vigorous runner production"
     ],
-    "description": "Healthy strawberry canopy primed for abundant fruit yield."
+    "description": "Healthy strawberry canopy primed for abundant fruit yield.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Maintain pine straw or plastic mulch beneath berries to preserve soil moisture.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Maintain runner management and provide adequate calcium during flowering."
+    }
   },
   "28": {
     "id": 28,
@@ -374,7 +542,13 @@
       "Yellow halos around leaf specks",
       "Defoliation"
     ],
-    "description": "Caused by Xanthomonas species causing necrotic spotting on leaves and stems."
+    "description": "Caused by Xanthomonas species causing necrotic spotting on leaves and stems.",
+    "solution": {
+      "immediate_action": "Remove infected leaves in dry conditions; sterilize hands and pruning tools after handling.",
+      "organic": "Apply fixed copper formulations combined with Bacillus subtilis preventative sprays.",
+      "chemical": "Spray copper hydroxide tank-mixed with Mancozeb to counter copper-tolerant bacterial strains.",
+      "cultural": "Use pathogen-free seeds (hot water treated); avoid working in field when tomato foliage is wet."
+    }
   },
   "29": {
     "id": 29,
@@ -387,7 +561,13 @@
       "Lower canopy yellowing and blight",
       "Stem cankers"
     ],
-    "description": "Caused by Alternaria linariae spreading upward through the canopy."
+    "description": "Caused by Alternaria linariae spreading upward through the canopy.",
+    "solution": {
+      "immediate_action": "Prune bottom 12 inches of foliage to eliminate soil-contact and target-spot lesions.",
+      "organic": "Spray liquid copper fungicide or potassium bicarbonate; mulch heavily beneath tomato plants.",
+      "chemical": "Apply Chlorothalonil, Mancozeb, or Difenoconazole at 7-10 day intervals after transplanting.",
+      "cultural": "Stake or cage tomato vines; practice 3-year rotation away from potato/tomato/eggplant."
+    }
   },
   "30": {
     "id": 30,
@@ -400,7 +580,13 @@
       "Fuzzy white fungal growth on undersides",
       "Rapid plant collapse"
     ],
-    "description": "Phytophthora infestans infection capable of destroying entire fields in days in cool wet conditions."
+    "description": "Phytophthora infestans infection capable of destroying entire fields in days in cool wet conditions.",
+    "solution": {
+      "immediate_action": "URGENT: Isolate affected plants; inspect stems and fruit for water-soaked dark lesions.",
+      "organic": "Apply preventative copper sprays prior to rainy spells; destroy infected plants in plastic bags.",
+      "chemical": "Apply systemic fungicides such as Cymoxanil + Mancozeb, Mandipropamid, or Fluopicolide.",
+      "cultural": "Never compost late-blight infected vines; plant late blight resistant tomato varieties."
+    }
   },
   "31": {
     "id": 31,
@@ -413,7 +599,13 @@
       "Olive-green velvety mold on undersides",
       "Leaf withering"
     ],
-    "description": "Fungal disease caused by Passalora fulva common in humid greenhouses and polyhouses."
+    "description": "Fungal disease caused by Passalora fulva common in humid greenhouses and polyhouses.",
+    "solution": {
+      "immediate_action": "Increase greenhouse/tunnel ventilation immediately to drop relative humidity below 80%.",
+      "organic": "Apply sulfur sprays or bio-fungicides (Bacillus subtilis) to leaf undersides.",
+      "chemical": "Apply Chlorothalonil, Copper Hydroxide, or Difenoconazole ensuring full underside coverage.",
+      "cultural": "Prune dense suckers; run circulation fans; space plants widely in greenhouse setups."
+    }
   },
   "32": {
     "id": 32,
@@ -426,7 +618,13 @@
       "Tiny black speck pycnidia",
       "Severe bottom-up defoliation"
     ],
-    "description": "Caused by Septoria lycopersici, one of the most destructive foliar diseases of tomato."
+    "description": "Caused by Septoria lycopersici, one of the most destructive foliar diseases of tomato.",
+    "solution": {
+      "immediate_action": "Strip off lower leaves showing small circular spots with dark margins and gray centers.",
+      "organic": "Apply copper soap fungicides; mulch with straw or cardboard to stop soil splash.",
+      "chemical": "Spray Chlorothalonil, Mancozeb, or Pyraclostrobin starting at first sign of lower spots.",
+      "cultural": "Disinfect tomato stakes with 10% bleach solution between seasons; rotate planting beds."
+    }
   },
   "33": {
     "id": 33,
@@ -439,7 +637,13 @@
       "Silken webbing on leaf undersides",
       "Bronzed scorched appearance"
     ],
-    "description": "Tetranychus urticae infestation sucking sap and causing rapid leaf desiccation."
+    "description": "Tetranychus urticae infestation sucking sap and causing rapid leaf desiccation.",
+    "solution": {
+      "immediate_action": "Spray leaf undersides with strong water jet or insecticidal soap to knock down mite colonies.",
+      "organic": "Release predatory mites (Phytoseiulus persimilis); apply neem oil or horticultural oils.",
+      "chemical": "Apply Abamectin, Bifenazate, or Spiromesifen selective miticides alternating modes of action.",
+      "cultural": "Keep plants well-watered as drought-stressed tomatoes are highly prone to rapid mite outbreaks."
+    }
   },
   "34": {
     "id": 34,
@@ -452,7 +656,13 @@
       "Concentric dark rings",
       "Foliar blighting"
     ],
-    "description": "Caused by Corynespora cassiicola causing circular target-like lesions on foliage and fruit."
+    "description": "Caused by Corynespora cassiicola causing circular target-like lesions on foliage and fruit.",
+    "solution": {
+      "immediate_action": "Prune out lower diseased foliage displaying concentric target lesions.",
+      "organic": "Apply bio-fungicides containing Trichoderma or copper sulfate protectants.",
+      "chemical": "Apply Azoxystrobin, Boscalid, or Chlorothalonil on a 10-day preventive schedule.",
+      "cultural": "Improve row spacing for rapid morning drying; remove and destroy post-harvest tomato vines."
+    }
   },
   "35": {
     "id": 35,
@@ -465,7 +675,13 @@
       "Marginal chlorosis (yellowing)",
       "Stunted growth and aborted flowers"
     ],
-    "description": "Begomovirus transmitted by whiteflies (Bemisia tabaci) leading to severe crop failure."
+    "description": "Begomovirus transmitted by whiteflies (Bemisia tabaci) leading to severe crop failure.",
+    "solution": {
+      "immediate_action": "CRITICAL: Rogue out and destroy stunted, curled plants; implement whitefly vector control.",
+      "organic": "Install 50-mesh insect netting; deploy yellow sticky traps; spray neem oil or insecticidal soap.",
+      "chemical": "Apply systemic insecticides such as Imidacloprid, Acetamiprid, or Thiamethoxam against whiteflies.",
+      "cultural": "Eradicate Solanaceous weed hosts (nightshade) around field margins; grow TYLCV-resistant varieties."
+    }
   },
   "36": {
     "id": 36,
@@ -478,7 +694,13 @@
       "Leaf distortion and blistering",
       "Shoestringing"
     ],
-    "description": "Highly contagious tobamovirus spread mechanically through hands, tools, and seeds."
+    "description": "Highly contagious tobamovirus spread mechanically through hands, tools, and seeds.",
+    "solution": {
+      "immediate_action": "Remove and destroy virus-infected plants immediately; disinfect hands and tools with 20% milk.",
+      "organic": "No cure for viral infection; apply neem oil to suppress aphids; plant resistant hybrids.",
+      "chemical": "No chemical virucides exist. Disinfect all tools and stakes with trisodium phosphate (TSP).",
+      "cultural": "Strictly prohibit tobacco smoking near tomatoes; wash hands thoroughly before working."
+    }
   },
   "37": {
     "id": 37,
@@ -491,7 +713,13 @@
       "Clean stems and petioles",
       "Uniform growth and strong blossom set"
     ],
-    "description": "Completely healthy tomato plant with optimal photosynthetic efficiency."
+    "description": "Completely healthy tomato plant with optimal photosynthetic efficiency.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Maintain consistent compost mulching and regular calcium/magnesium foliar feeds.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Prune suckers routinely, maintain drip irrigation, and tie vines securely to supports."
+    }
   },
   "38": {
     "id": 38,
@@ -504,7 +732,13 @@
       "Ruptured epidermis with dark spore dust",
       "Premature lodging and grain shriveling"
     ],
-    "description": "Destructive fungal disease caused by Puccinia graminis f. sp. tritici damaging stems and leaves."
+    "description": "Destructive fungal disease caused by Puccinia graminis f. sp. tritici damaging stems and leaves.",
+    "solution": {
+      "immediate_action": "Scout wheat tillers for reddish-brown pustules; alert regional agricultural extension service.",
+      "organic": "Apply bio-control Trichoderma formulations and preventative copper sprays.",
+      "chemical": "Apply Triazole fungicides (Propiconazole, Tebuconazole) immediately at flag leaf emergence.",
+      "cultural": "Plant stem rust-resistant wheat varieties (Sr genes); eradicate alternate host barberry bushes."
+    }
   },
   "39": {
     "id": 39,
@@ -517,7 +751,13 @@
       "Linear rows of urediniospores",
       "Chlorotic foliage bleaching"
     ],
-    "description": "Caused by Puccinia striiformis, thriving in cool, humid climates and decimating wheat grain yields."
+    "description": "Caused by Puccinia striiformis, thriving in cool, humid climates and decimating wheat grain yields.",
+    "solution": {
+      "immediate_action": "Inspect leaf blades for yellow-orange linear stripes of rust pustules in cool weather.",
+      "organic": "Apply sulfur dust or bio-fungicide sprays at early tillering.",
+      "chemical": "Spray Propiconazole or Azoxystrobin + Difenoconazole when flag leaf is threatened.",
+      "cultural": "Sow early-maturing resistant wheat varieties; avoid late nitrogen over-fertilization."
+    }
   },
   "40": {
     "id": 40,
@@ -530,7 +770,13 @@
       "Scattered randomly across upper leaf surfaces",
       "Premature leaf drying"
     ],
-    "description": "Caused by Puccinia triticina, the most common rust of wheat worldwide."
+    "description": "Caused by Puccinia triticina, the most common rust of wheat worldwide.",
+    "solution": {
+      "immediate_action": "Scout upper leaves for small circular orange-brown pustules.",
+      "organic": "Apply preventative sulfur or botanical neem formulations.",
+      "chemical": "Apply Tebuconazole, Metconazole, or Pyraclostrobin at flag leaf extension stage.",
+      "cultural": "Plant diverse multi-line resistant wheat cultivars; ensure balanced potassium nutrition."
+    }
   },
   "41": {
     "id": 41,
@@ -543,7 +789,13 @@
       "Foliar yellowing",
       "Black speck cleistothecia in mature mats"
     ],
-    "description": "Caused by Blumeria graminis f. sp. tritici, reducing photosynthetic surface area in dense stands."
+    "description": "Caused by Blumeria graminis f. sp. tritici, reducing photosynthetic surface area in dense stands.",
+    "solution": {
+      "immediate_action": "Inspect lower tillers for powdery white mycelial cushions; assess canopy density.",
+      "organic": "Apply sulfur-based fungicides or potassium bicarbonate in early spring.",
+      "chemical": "Apply Epoxiconazole, Fenpropimorph, or Prothioconazole at stem elongation stage.",
+      "cultural": "Avoid dense seed rates; reduce excessive spring nitrogen fertilizer applications."
+    }
   },
   "42": {
     "id": 42,
@@ -556,7 +808,13 @@
       "Pycnidia specks within lesions",
       "Extensive leaf drying"
     ],
-    "description": "Caused by Zymoseptoria tritici and Bipolaris sorokiniana affecting flag leaves."
+    "description": "Caused by Zymoseptoria tritici and Bipolaris sorokiniana affecting flag leaves.",
+    "solution": {
+      "immediate_action": "Check flag leaves for tan necrotic spots with chlorotic yellow borders.",
+      "organic": "Apply copper oxychloride and bio-fungicides containing Bacillus subtilis.",
+      "chemical": "Apply Azoxystrobin + Propiconazole or Chlorothalonil at boot stage to protect flag leaf.",
+      "cultural": "Practice minimum 2-year crop rotation; practice stubble management to bury fungal fruiting bodies."
+    }
   },
   "43": {
     "id": 43,
@@ -569,7 +827,13 @@
       "Uniform clean leaf blades",
       "Strong photosynthetic capacity"
     ],
-    "description": "Optimal healthy wheat canopy ready for robust heading and grain filling."
+    "description": "Optimal healthy wheat canopy ready for robust heading and grain filling.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Maintain balanced nitrogen top-dressing and bio-fertilizer seed inoculation.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Maintain optimal seed bed moisture and monitor regularly for weed competition."
+    }
   },
   "44": {
     "id": 44,
@@ -582,7 +846,13 @@
       "Neck and node rot",
       "Empty panicles"
     ],
-    "description": "Caused by Magnaporthe oryzae, the most devastating fungal disease of cultivated rice worldwide."
+    "description": "Caused by Magnaporthe oryzae, the most devastating fungal disease of cultivated rice worldwide.",
+    "solution": {
+      "immediate_action": "Drain paddy field temporarily to reduce relative humidity; avoid excessive nitrogen.",
+      "organic": "Apply Pseudomonas fluorescens or Trichoderma viride seed and foliar treatments.",
+      "chemical": "Apply Tricyclazole, Isoprothiolane, or Kasugamycin at panicle initiation and heading.",
+      "cultural": "Plant blast-resistant paddy varieties; practice balanced potassium and silicon fertilization."
+    }
   },
   "45": {
     "id": 45,
@@ -595,7 +865,13 @@
       "Seed discoloration",
       "Seedling blight"
     ],
-    "description": "Caused by Bipolaris oryzae, historically associated with severe famine in nutrient-deficient soils."
+    "description": "Caused by Bipolaris oryzae, historically associated with severe famine in nutrient-deficient soils.",
+    "solution": {
+      "immediate_action": "Apply foliar potassium and silicon fertilizer to strengthen silica cell walls.",
+      "organic": "Spray neem-based formulations and apply bio-control agents at tillering.",
+      "chemical": "Apply Mancozeb, Propiconazole, or Edifenphos at early symptom appearance.",
+      "cultural": "Correct soil nutrient deficiencies (especially N, K, and Zn); use clean, certified seed."
+    }
   },
   "46": {
     "id": 46,
@@ -608,7 +884,13 @@
       "Bacterial ooze droplets in high humidity",
       "Kresek wilt in seedlings"
     ],
-    "description": "Severe vascular disease caused by Xanthomonas oryzae pv. oryzae causing extensive lodging and grain loss."
+    "description": "Severe vascular disease caused by Xanthomonas oryzae pv. oryzae causing extensive lodging and grain loss.",
+    "solution": {
+      "immediate_action": "Lower water levels in paddy; withhold nitrogen fertilizer until bacterial disease stabilizes.",
+      "organic": "Spray fresh cow dung slurry extract (bio-antagonist) or Streptomyces-based formulations.",
+      "chemical": "Apply Copper Hydroxide mixed with Streptocycline (plant antibiotic where approved).",
+      "cultural": "Avoid clipping rice seedling tips during transplanting; maintain clean bunds free of weed hosts."
+    }
   },
   "47": {
     "id": 47,
@@ -621,7 +903,13 @@
       "Serpentine banded necrotic blotches",
       "Canopy collapse"
     ],
-    "description": "Fungal disease caused by Rhizoctonia solani spreading rapidly in warm, dense flooded paddies."
+    "description": "Fungal disease caused by Rhizoctonia solani spreading rapidly in warm, dense flooded paddies.",
+    "solution": {
+      "immediate_action": "Drain excess standing water; clear floating organic debris from paddy surface.",
+      "organic": "Apply Trichoderma harzianum or Bacillus subtilis to water line and base of tillers.",
+      "chemical": "Apply Validamycin, Hexaconazole, or Thifluzamide targeting the lower stem sheath zone.",
+      "cultural": "Adopt wider hill spacing (20x15 cm) to improve light penetration; avoid excessive nitrogen."
+    }
   },
   "48": {
     "id": 48,
@@ -634,6 +922,12 @@
       "Clean leaf collars and sheaths",
       "Sturdy tillers"
     ],
-    "description": "Healthy rice crop foliage with optimal photosynthetic rate and tiller development."
+    "description": "Healthy rice crop foliage with optimal photosynthetic rate and tiller development.",
+    "solution": {
+      "immediate_action": "Crop is healthy. No intervention required.",
+      "organic": "Apply Azolla green manure and beneficial blue-green algae bio-fertilizers.",
+      "chemical": "No chemical applications needed.",
+      "cultural": "Maintain Alternate Wetting and Drying (AWD) irrigation to encourage deep root growth."
+    }
   }
 }

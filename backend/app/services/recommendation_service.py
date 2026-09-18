@@ -22,15 +22,58 @@ class RecommendationEngine:
 
         # 1. Pathogen & Disease Recommendations
         if "healthy" not in disease_name.lower():
+            solution = disease_res.get("solution") or {}
+            immediate_action = solution.get("immediate_action") or f"Inspect nearby {crop} foliage for early symptoms of {disease_name}."
+            organic_sol = solution.get("organic")
+            chemical_sol = solution.get("chemical")
+            cultural_sol = solution.get("cultural")
+
+            # Immediate Action
             recommendations.append({
                 "priority": "HIGH",
-                "category": "Pathogen Prevention & Monitoring",
-                "action": f"Inspect nearby {crop} foliage for early symptoms of {disease_name}.",
-                "timeframe": "Within 24 to 48 hours",
-                "reason": f"The disease classifier detected a high-probability ({int(confidence*100)}%) {disease_name} pattern.",
-                "safety_note": "Consult a certified local agronomic specialist before applying fungicides or chemical treatments.",
-                "knowledge_ref": "FAO Crop Protection Standards - Section 4.2"
+                "category": f"{crop} Pathology: Immediate Intervention",
+                "action": immediate_action,
+                "timeframe": "Within 24 hours",
+                "reason": f"High-confidence diagnosis ({int(confidence*100)}%) for {disease_name} on {crop}.",
+                "safety_note": "Wear protective gloves and eye protection when pruning or handling diseased foliage.",
+                "knowledge_ref": "FAO International Plant Protection Convention (IPPC)"
             })
+
+            # Organic / Bio-Control Solution
+            if organic_sol:
+                recommendations.append({
+                    "priority": "HIGH",
+                    "category": "Organic / Bio-Control Remedy",
+                    "action": organic_sol,
+                    "timeframe": "Within 24 to 72 hours",
+                    "reason": f"Targeted biological control suppresses {disease_name} while preserving beneficial soil microbes.",
+                    "safety_note": "Apply bio-controls during early morning or evening to preserve microbial viability.",
+                    "knowledge_ref": "Integrated Pest Management (IPM) Biological Controls"
+                })
+
+            # Chemical / Fungicide Treatment
+            if chemical_sol:
+                recommendations.append({
+                    "priority": "MEDIUM",
+                    "category": "Chemical / Fungicide Prescription",
+                    "action": chemical_sol,
+                    "timeframe": "If lesions exceed 5% of canopy",
+                    "reason": f"Chemical therapy to prevent epidemic spread of {disease_name}.",
+                    "safety_note": "Follow strict label dilution rates, observe Pre-Harvest Intervals (PHI), and rotate FRAC groups.",
+                    "knowledge_ref": "Fungicide Resistance Action Committee (FRAC) Guidelines"
+                })
+
+            # Cultural Management
+            if cultural_sol:
+                recommendations.append({
+                    "priority": "MEDIUM",
+                    "category": "Cultural & Preventative Management",
+                    "action": cultural_sol,
+                    "timeframe": "Ongoing / Next irrigation cycle",
+                    "reason": f"Long-term crop sanitation to break pathogen reproduction cycle.",
+                    "safety_note": "Do not compost diseased leaves or tubers; bag and remove from field.",
+                    "knowledge_ref": "Good Agricultural Practices (GAP) Sanitation Protocols"
+                })
             
             if hum > 75:
                 recommendations.append({
@@ -46,9 +89,9 @@ class RecommendationEngine:
             recommendations.append({
                 "priority": "LOW",
                 "category": "Routine Field Monitoring",
-                "action": "Maintain weekly routine crop health inspections.",
+                "action": f"Maintain standard crop scouting for {crop}. Foliage displays healthy vigor.",
                 "timeframe": "Weekly",
-                "reason": "Crop foliage appears healthy with no visible pathogen symptoms.",
+                "reason": f"No pathogen symptoms detected on {crop} foliage.",
                 "safety_note": "Continue standard preventive cultural practices.",
                 "knowledge_ref": "General Good Agricultural Practices (GAP)"
             })

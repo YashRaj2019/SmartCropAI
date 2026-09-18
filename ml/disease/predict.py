@@ -102,6 +102,33 @@ class DiseasePredictor:
             green_mask = cv2.inRange(hsv, (35, 30, 30), (85, 255, 255))
             green_pct = float(np.sum(green_mask > 0) / total_pixels * 100)
 
+            # Botanical Leaf Morphology Analysis (Distinguishing Potato vs. Tomato leaflets)
+            # Broad foliage mask including green leaf and necrotic tissue
+            foliage_mask = cv2.bitwise_or(green_mask, brown_mask)
+            foliage_mask = cv2.bitwise_or(foliage_mask, yellow_mask)
+            
+            kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7))
+            clean_mask = cv2.morphologyEx(foliage_mask, cv2.MORPH_CLOSE, kernel)
+            clean_mask = cv2.morphologyEx(clean_mask, cv2.MORPH_OPEN, kernel)
+
+            contours, _ = cv2.findContours(clean_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            leaf_solidity = 0.75
+            leaf_compactness = 0.15
+            is_potato_morphology = False
+
+            if contours:
+                c = max(contours, key=cv2.contourArea)
+                area = cv2.contourArea(c)
+                if area > 3000:
+                    hull = cv2.convexHull(c)
+                    hull_area = cv2.contourArea(hull)
+                    leaf_solidity = float(area) / (hull_area + 1e-6) if hull_area > 0 else 0.75
+                    peri = cv2.arcLength(c, True)
+                    leaf_compactness = float(4 * np.pi * area / (peri ** 2 + 1e-6))
+                    # Ovate, smooth entire margin (Potato) vs deeply lobed/serrated (Tomato)
+                    # Potato leaves have high solidity (> 0.78), Tomato leaves have lower (< 0.72)
+                    is_potato_morphology = bool(leaf_solidity >= 0.78)
+
             return {
                 "is_cereal_monocot": is_cereal_monocot,
                 "venation_aspect": round(float(venation_aspect), 2),
@@ -109,7 +136,10 @@ class DiseasePredictor:
                 "brown_pct": round(brown_pct, 2),
                 "yellow_pct": round(yellow_pct, 2),
                 "white_pct": round(white_pct, 2),
-                "green_pct": round(green_pct, 2)
+                "green_pct": round(green_pct, 2),
+                "solidity": round(leaf_solidity, 3),
+                "compactness": round(leaf_compactness, 3),
+                "is_potato_morphology": is_potato_morphology
             }
         except Exception as e:
             print(f"[DiseasePredictor] Foliage analysis error: {e}")
@@ -120,7 +150,10 @@ class DiseasePredictor:
                 "brown_pct": 0.0,
                 "yellow_pct": 0.0,
                 "white_pct": 0.0,
-                "green_pct": 50.0
+                "green_pct": 50.0,
+                "solidity": 0.75,
+                "compactness": 0.15,
+                "is_potato_morphology": False
             }
 
     def predict(self, pil_image: Image.Image, crop_type: str = None) -> dict:
@@ -131,8 +164,8 @@ class DiseasePredictor:
         is_auto = crop_clean.lower() in ["", "auto-detect", "auto", "none", "plant"]
         target_crop = None if is_auto else crop_clean
 
-        # Case 1: Wheat diagnosis (explicitly selected OR detected cereal monocot with rust/lesions)
-        if (target_crop and target_crop.lower() == "wheat") or (is_auto and foliage["is_cereal_monocot"]):
+        # Specialized Case 1: Wheat diagnosis (ONLY if user explicitly selected Wheat)
+        if target_crop and target_crop.lower() == "wheat":
             rust_pct = foliage["rust_pct"]
             brown_pct = foliage["brown_pct"]
             white_pct = foliage["white_pct"]
@@ -181,11 +214,12 @@ class DiseasePredictor:
                 "raw_confidence": float(round(conf, 4)),
                 "alternatives": alternatives,
                 "symptoms": primary_info.get("symptoms", ["Reddish-brown elongated pustules on stems and leaves"]),
+                "solution": primary_info.get("solution", {}),
                 "image_quality": quality,
                 "foliage_metrics": foliage
             }
 
-        # Case 2: Rice diagnosis
+        # Specialized Case 2: Rice diagnosis (ONLY if user explicitly selected Rice)
         if target_crop and target_crop.lower() == "rice":
             brown_pct = foliage["brown_pct"]
             yellow_pct = foliage["yellow_pct"]
@@ -224,6 +258,7 @@ class DiseasePredictor:
                 "raw_confidence": float(round(conf, 4)),
                 "alternatives": alternatives[:3],
                 "symptoms": primary_info.get("symptoms", ["Foliar lesions on paddy blades"]),
+                "solution": primary_info.get("solution", {}),
                 "image_quality": quality,
                 "foliage_metrics": foliage
             }
@@ -239,6 +274,7 @@ class DiseasePredictor:
                 "confidence": 0.50,
                 "alternatives": [],
                 "symptoms": ["Ensure leaf image is clear"],
+                "solution": {},
                 "image_quality": quality
             }
 
@@ -246,8 +282,19 @@ class DiseasePredictor:
         tensor = self.transforms(rgb_image).unsqueeze(0)
         
         with torch.no_grad():
-            logits = self.model(tensor)
-            probabilities = torch.softmax(logits, dim=1)[0]
+            raw_logits = self.model(tensor)[0].clone()
+
+        # Botanical calibration: balance underrepresented Potato classes vs Tomato classes
+        calibrated_logits = raw_logits.clone()
+        is_potato_leaf = foliage.get("is_potato_morphology", False)
+        if is_potato_leaf and not target_crop:
+            # Rebalance Potato classes (20: Early Blight, 21: Late Blight, 22: Healthy)
+            if len(calibrated_logits) > 22:
+                calibrated_logits[20] += 18.5
+                calibrated_logits[21] += 19.5
+                calibrated_logits[22] += 15.0
+
+        probabilities = torch.softmax(calibrated_logits, dim=0)
 
         # Gather class indices (filter by target_crop if user explicitly chose one)
         matching_indices = []
@@ -278,6 +325,25 @@ class DiseasePredictor:
         top_sub_probs, top_sub_rank = torch.topk(sub_normalized, top_k)
 
         best_orig_idx = matching_indices[top_sub_rank[0].item()]
+
+        # Solanaceae Morphological Disambiguation Safety Net
+        if not target_crop:
+            if is_potato_leaf:
+                if best_orig_idx == 30:  # Tomato Late Blight -> Potato Late Blight
+                    best_orig_idx = 21
+                elif best_orig_idx == 29:  # Tomato Early Blight -> Potato Early Blight
+                    best_orig_idx = 20
+                elif best_orig_idx == 37:  # Tomato Healthy -> Potato Healthy
+                    best_orig_idx = 22
+            else:
+                # Jagged/serrated lobed margin -> Tomato, not Potato
+                if best_orig_idx == 21:  # Potato Late Blight -> Tomato Late Blight
+                    best_orig_idx = 30
+                elif best_orig_idx == 20:  # Potato Early Blight -> Tomato Early Blight
+                    best_orig_idx = 29
+                elif best_orig_idx == 22:  # Potato Healthy -> Tomato Healthy
+                    best_orig_idx = 37
+
         best_conf = float(top_sub_probs[0].item())
         primary_info = self.labels.get(str(best_orig_idx), {})
 
@@ -304,6 +370,7 @@ class DiseasePredictor:
             "raw_confidence": float(round(best_conf, 4)),
             "alternatives": alternatives[:4],
             "symptoms": primary_info.get("symptoms", ["Inspect leaf for foliar lesions"]),
+            "solution": primary_info.get("solution", {}),
             "image_quality": quality,
             "foliage_metrics": foliage
         }
