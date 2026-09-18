@@ -22,6 +22,9 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  if (config.data instanceof FormData) {
+    delete config.headers['Content-Type'];
+  }
   return config;
 });
 
@@ -66,11 +69,7 @@ export const apiService = {
     }
     formData.append('farm_inputs_json', JSON.stringify(farmInputs));
 
-    const response = await api.post('/analyze', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.post('/analyze', formData);
     return response.data;
   },
 
@@ -86,11 +85,7 @@ export const apiService = {
     }
     formData.append('crop_type', cropType);
 
-    const response = await api.post('/disease/predict', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.post('/disease/predict', formData);
     return response.data;
   },
 
