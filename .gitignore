@@ -57,3 +57,4 @@ storage/gradcam/*
 !storage/gradcam/.gitkeep
 storage/*.pdf
 storage/db_history.json
+storage/users.json

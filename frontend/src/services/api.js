@@ -17,7 +17,43 @@ const api = axios.create({
   },
 });
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('smartcrop_auth_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const apiService = {
+  // Authentication methods
+  register: async (userData) => {
+    const response = await api.post('/auth/register', userData);
+    if (response.data?.access_token) {
+      localStorage.setItem('smartcrop_auth_token', response.data.access_token);
+      localStorage.setItem('smartcrop_user', JSON.stringify(response.data.user));
+    }
+    return response.data;
+  },
+
+  login: async (credentials) => {
+    const response = await api.post('/auth/login', credentials);
+    if (response.data?.access_token) {
+      localStorage.setItem('smartcrop_auth_token', response.data.access_token);
+      localStorage.setItem('smartcrop_user', JSON.stringify(response.data.user));
+    }
+    return response.data;
+  },
+
+  getMe: async () => {
+    const response = await api.get('/auth/me');
+    return response.data;
+  },
+
+  logout: () => {
+    localStorage.removeItem('smartcrop_auth_token');
+    localStorage.removeItem('smartcrop_user');
+  },
   // Full composite crop analysis
   analyzeCrop: async (imageFileOrUrl, farmInputs) => {
     const formData = new FormData();

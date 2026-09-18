@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Sprout, Activity, History, CloudSun, Cpu, GitCompare, ChevronRight, ShieldCheck, AlertTriangle, Sparkles } from 'lucide-react';
+import { Sprout, Activity, History, CloudSun, Cpu, GitCompare, ChevronRight, ShieldCheck, AlertTriangle, Sparkles, User, LogOut, LogIn } from 'lucide-react';
 import { apiService } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
   const location = useLocation();
+  const { user, isAuthenticated, logout } = useAuth();
   const [modelStatus, setModelStatus] = useState(null);
 
   useEffect(() => {
@@ -133,6 +135,40 @@ export default function Navbar() {
               <ChevronRight className="w-4 h-4" />
             </Link>
           )}
+
+          {/* User Profile & Auth Controls */}
+          <div className="flex items-center space-x-2 pl-2 border-l border-slate-800">
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300" title={`Logged in as ${user?.email}`}>
+                  <User className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="font-bold text-white max-w-[90px] truncate">{user?.name}</span>
+                </div>
+                <button
+                  onClick={logout}
+                  title="Sign Out"
+                  className="p-2 rounded-lg bg-slate-900 hover:bg-rose-950/60 hover:border-rose-500/40 border border-slate-800 text-slate-400 hover:text-rose-300 transition-colors cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-1.5">
+                <Link
+                  to="/login"
+                  className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-500 hover:bg-emerald-600 text-slate-950 shadow-md shadow-emerald-500/20 transition-all hover:scale-105"
+                >
+                  Register
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

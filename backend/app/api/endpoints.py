@@ -5,7 +5,7 @@ import uuid
 import asyncio
 import httpx
 from typing import Optional
-from fastapi import APIRouter, File, UploadFile, Form, HTTPException, Query, Response
+from fastapi import APIRouter, File, UploadFile, Form, HTTPException, Query, Response, Header
 from fastapi.responses import FileResponse, JSONResponse
 from PIL import Image
 
@@ -17,6 +17,8 @@ from backend.app.services.simulation_service import SimulationEngine
 from backend.app.services.weather_service import WeatherService
 from backend.app.services.history_service import history_service
 from backend.app.services.report_service import PDFReportGenerator
+from backend.app.schemas.auth import UserRegister, UserLogin, UserResponse, AuthResponse
+from backend.app.services.auth_service import auth_service, verify_token
 
 router = APIRouter()
 
@@ -237,3 +239,38 @@ def download_pdf_report(analysis_id: str):
     
     PDFReportGenerator.generate_pdf(record, report_path)
     return FileResponse(report_path, media_type="application/pdf", filename=f"SmartCrop_AI_Report_{analysis_id[:8]}.pdf")
+
+# ==============================================================================
+# Authentication & User Management Endpoints
+# ==============================================================================
+
+@router.post("/auth/register", response_model=AuthResponse)
+def register_user(payload: UserRegister):
+    """Register a new agricultural producer account."""
+    try:
+        return auth_service.register(payload.name, payload.email, payload.password, payload.farm_name)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail={"code": "REGISTRATION_FAILED", "message": str(e)})
+
+@router.post("/auth/login", response_model=AuthResponse)
+def login_user(payload: UserLogin):
+    """Authenticate existing producer and return access token."""
+    try:
+        return auth_service.login(payload.email, payload.password)
+    except ValueError as e:
+        raise HTTPException(status_code=401, detail={"code": "AUTH_FAILED", "message": str(e)})
+
+@router.get("/auth/me")
+def get_current_user(authorization: Optional[str] = Header(None)):
+    """Retrieve current logged in user profile from authorization token."""
+    if not authorization:
+        raise HTTPException(status_code=401, detail={"code": "UNAUTHORIZED", "message": "Authentication required."})
+    token = authorization.replace("Bearer ", "").replace("bearer ", "").strip()
+    user_id = verify_token(token)
+    if not user_id:
+        raise HTTPException(status_code=401, detail={"code": "INVALID_TOKEN", "message": "Session expired or invalid token."})
+    user = auth_service.get_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail={"code": "USER_NOT_FOUND", "message": "User not found."})
+    return user
+

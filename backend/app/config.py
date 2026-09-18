@@ -6,6 +6,7 @@ class Settings(BaseModel):
     PROJECT_NAME: str = "SmartCrop AI"
     VERSION: str = "1.0.0"
     API_PREFIX: str = "/api"
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "smartcrop_ai_super_secret_jwt_key_2026")
     
     # ML settings
     ML_MODE: str = os.getenv("ML_MODE", "production")
