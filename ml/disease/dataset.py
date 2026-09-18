@@ -2,7 +2,6 @@ import os
 import cv2
 import numpy as np
 from PIL import Image
-# torch/Dataset imported lazily — only needed for training scripts, not for inference
 
 class ImageQualityAnalyzer:
     """
@@ -45,24 +44,35 @@ class ImageQualityAnalyzer:
             "resolution": f"{w}x{h}"
         }
 
-class CropDiseaseDataset(Dataset):
-    """
-    Dataset loader for crop disease leaf images.
-    """
-    def __init__(self, image_paths, labels, transform=None):
-        self.image_paths = image_paths
-        self.labels = labels
-        self.transform = transform
 
-    def __len__(self):
-        return len(self.image_paths)
+# CropDiseaseDataset is only used by training scripts — guard with try/except
+# so importing this module never crashes when torch is not yet loaded.
+try:
+    import torch
+    from torch.utils.data import Dataset
 
-    def __getitem__(self, idx):
-        img_path = self.image_paths[idx]
-        image = Image.open(img_path).convert('RGB')
-        label = self.labels[idx]
+    class CropDiseaseDataset(Dataset):
+        """
+        Dataset loader for crop disease leaf images. Used only during model training.
+        """
+        def __init__(self, image_paths, labels, transform=None):
+            self.image_paths = image_paths
+            self.labels = labels
+            self.transform = transform
 
-        if self.transform:
-            image = self.transform(image)
+        def __len__(self):
+            return len(self.image_paths)
 
-        return image, torch.tensor(label, dtype=torch.long)
+        def __getitem__(self, idx):
+            img_path = self.image_paths[idx]
+            image = Image.open(img_path).convert('RGB')
+            label = self.labels[idx]
+
+            if self.transform:
+                image = self.transform(image)
+
+            return image, torch.tensor(label, dtype=torch.long)
+
+except ImportError:
+    # torch not available at import time (e.g., Render startup) — training class skipped
+    pass
