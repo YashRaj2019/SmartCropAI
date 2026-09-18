@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smartcrop_app
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - PORT=8000
+      - ML_MODE=production
+      - MONGODB_URL=mongodb://mongo:27017
+      - DATABASE_NAME=smartcrop_db
+      - STORAGE_DIR=/app/storage
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
+    volumes:
+      - smartcrop_storage:/app/storage
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:6.0
+    container_name: smartcrop_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+  smartcrop_storage:

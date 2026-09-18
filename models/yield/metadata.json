@@ -1,0 +1,14 @@
+{
+  "model_name": "XGBoostRegressor",
+  "model_version": "1.0.0",
+  "model_type": "yield_regressor",
+  "dataset_version": "agri-yield-v1",
+  "trained_at": "2026-08-23T00:25:16.621098",
+  "metrics": {
+    "mae": 0.164,
+    "rmse": 0.206,
+    "r2": 0.925,
+    "sample_count": 500
+  },
+  "status": "production"
+}

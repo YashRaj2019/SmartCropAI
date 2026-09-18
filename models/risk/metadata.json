@@ -1,0 +1,14 @@
+{
+  "model_name": "XGBoostClassifier",
+  "model_version": "1.0.0",
+  "model_type": "risk_classifier",
+  "dataset_version": "agri-risk-v1",
+  "trained_at": "2026-08-23T00:25:16.781447",
+  "metrics": {
+    "accuracy": 0.912,
+    "precision": 0.862,
+    "recall": 0.893,
+    "f1_score": 0.877
+  },
+  "status": "production"
+}

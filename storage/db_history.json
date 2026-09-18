@@ -1,0 +1,280 @@
+[
+  {
+    "_id": "1115fc63-3ba4-4f12-b7ef-adf1404fd203",
+    "id": "1115fc63-3ba4-4f12-b7ef-adf1404fd203",
+    "timestamp": "2026-08-23T00:46:56.481562",
+    "model_type": "production",
+    "farm_inputs": {
+      "crop_type": "Potato",
+      "crop_variety": "Kufri Jyoti",
+      "growth_stage": "Vegetative",
+      "sowing_date": "2025-02-15",
+      "location": "Central Valley",
+      "season": "Monsoon",
+      "soil_type": "Loam",
+      "soil_ph": 6.5,
+      "nitrogen": 140,
+      "phosphorus": 60,
+      "potassium": 50,
+      "soil_moisture": 45,
+      "temperature": 24.5,
+      "humidity": 65,
+      "rainfall": 120,
+      "wind_speed": 12,
+      "irrigation_type": "Drip",
+      "disease_confidence": 0.11999999731779099,
+      "disease_status": "Diseased"
+    },
+    "disease_analysis": {
+      "model_type": "production",
+      "model_name": "EfficientNet-B0 / MobileNetV2",
+      "model_version": "1.0.0",
+      "disease": "Potato Late Blight",
+      "confidence": 0.11999999731779099,
+      "alternatives": [
+        {
+          "label": "Potato Late Blight",
+          "probability": 0.11699999868869781
+        },
+        {
+          "label": "Potato Early Blight",
+          "probability": 0.10570000112056732
+        },
+        {
+          "label": "Corn Healthy",
+          "probability": 0.10509999841451645
+        }
+      ],
+      "symptoms": [
+        "Dark irregular leaf lesions",
+        "White mold growth under damp conditions",
+        "Rapid foliage decay"
+      ],
+      "image_quality": {
+        "score": 0.9,
+        "status": "acceptable",
+        "laplacian_variance": 255.83,
+        "brightness": 141.3,
+        "resolution": "810x439"
+      },
+      "gradcam_url": "/storage/gradcam/latest_gradcam.jpg"
+    },
+    "yield_analysis": {
+      "model_type": "production",
+      "model_name": "XGBoostRegressor",
+      "model_version": "1.0.0",
+      "predicted_yield": 4.29,
+      "unit": "tons/hectare",
+      "lower_bound": 3.95,
+      "upper_bound": 4.63,
+      "confidence": 0.84,
+      "feature_importance": [
+        {
+          "feature": "rainfall",
+          "importance": 0.26,
+          "direction": "positive"
+        },
+        {
+          "feature": "temperature",
+          "importance": 0.22,
+          "direction": "positive"
+        },
+        {
+          "feature": "nitrogen",
+          "importance": 0.19,
+          "direction": "positive"
+        },
+        {
+          "feature": "soil_ph",
+          "importance": 0.15,
+          "direction": "positive"
+        },
+        {
+          "feature": "humidity",
+          "importance": 0.1,
+          "direction": "positive"
+        },
+        {
+          "feature": "soil_moisture",
+          "importance": 0.08,
+          "direction": "positive"
+        }
+      ]
+    },
+    "risk_analysis": {
+      "model_type": "production",
+      "model_name": "XGBoostClassifier",
+      "model_version": "1.0.0",
+      "risk_score": 24,
+      "risk_level": "LOW",
+      "components": {
+        "disease_risk": 11,
+        "weather_risk": 30,
+        "soil_risk": 33,
+        "environmental_stress": 36
+      },
+      "explanation": "Environmental parameters are within acceptable agricultural thresholds."
+    },
+    "recommendations": [
+      {
+        "priority": "HIGH",
+        "category": "Pathogen Prevention & Monitoring",
+        "action": "Inspect nearby Potato foliage for early symptoms of Potato Late Blight.",
+        "timeframe": "Within 24 to 48 hours",
+        "reason": "The disease classifier detected a high-probability (11%) Potato Late Blight pattern.",
+        "safety_note": "Consult a certified local agronomic specialist before applying fungicides or chemical treatments.",
+        "knowledge_ref": "FAO Crop Protection Standards - Section 4.2"
+      }
+    ],
+    "crop_health_score": 76,
+    "image_url": "/storage/uploads/upload_a054cadb-77b1-48d4-afdd-9e6eed2f2409.webp"
+  },
+  {
+    "_id": "4c40decd-a685-4f5d-a21f-2e40a080c1f3",
+    "id": "4c40decd-a685-4f5d-a21f-2e40a080c1f3",
+    "timestamp": "2026-08-23T00:43:18.228703",
+    "model_type": "production",
+    "farm_inputs": {
+      "crop_type": "Potato",
+      "crop_variety": "Kufri Jyoti",
+      "growth_stage": "Fruiting",
+      "sowing_date": "2025-01-10",
+      "location": "North Region",
+      "season": "Rabi",
+      "soil_type": "Loam",
+      "soil_ph": 5.8,
+      "nitrogen": 110,
+      "phosphorus": 45,
+      "potassium": 40,
+      "soil_moisture": 75,
+      "temperature": 21,
+      "humidity": 88,
+      "rainfall": 180,
+      "wind_speed": 14,
+      "irrigation_type": "Flood",
+      "disease_confidence": 0.11999999731779099,
+      "disease_status": "Diseased"
+    },
+    "disease_analysis": {
+      "model_type": "production",
+      "model_name": "EfficientNet-B0 / MobileNetV2",
+      "model_version": "1.0.0",
+      "disease": "Potato Late Blight",
+      "confidence": 0.11999999731779099,
+      "alternatives": [
+        {
+          "label": "Potato Late Blight",
+          "probability": 0.11789999902248383
+        },
+        {
+          "label": "Tomato Late Blight",
+          "probability": 0.10869999974966049
+        },
+        {
+          "label": "Tomato Early Blight",
+          "probability": 0.10779999941587448
+        }
+      ],
+      "symptoms": [
+        "Dark irregular leaf lesions",
+        "White mold growth under damp conditions",
+        "Rapid foliage decay"
+      ],
+      "image_quality": {
+        "score": 0.27,
+        "status": "blurry",
+        "laplacian_variance": 0.0,
+        "brightness": 96.0,
+        "resolution": "224x224"
+      },
+      "gradcam_url": "/storage/gradcam/latest_gradcam.jpg"
+    },
+    "yield_analysis": {
+      "model_type": "production",
+      "model_name": "XGBoostRegressor",
+      "model_version": "1.0.0",
+      "predicted_yield": 4.19,
+      "unit": "tons/hectare",
+      "lower_bound": 3.85,
+      "upper_bound": 4.53,
+      "confidence": 0.84,
+      "feature_importance": [
+        {
+          "feature": "rainfall",
+          "importance": 0.26,
+          "direction": "positive"
+        },
+        {
+          "feature": "temperature",
+          "importance": 0.22,
+          "direction": "positive"
+        },
+        {
+          "feature": "nitrogen",
+          "importance": 0.19,
+          "direction": "negative"
+        },
+        {
+          "feature": "soil_ph",
+          "importance": 0.15,
+          "direction": "negative"
+        },
+        {
+          "feature": "humidity",
+          "importance": 0.1,
+          "direction": "negative"
+        },
+        {
+          "feature": "soil_moisture",
+          "importance": 0.08,
+          "direction": "positive"
+        }
+      ]
+    },
+    "risk_analysis": {
+      "model_type": "production",
+      "model_name": "XGBoostClassifier",
+      "model_version": "1.0.0",
+      "risk_score": 35,
+      "risk_level": "MEDIUM",
+      "components": {
+        "disease_risk": 11,
+        "weather_risk": 52,
+        "soil_risk": 54,
+        "environmental_stress": 47
+      },
+      "explanation": "Environmental parameters are within acceptable agricultural thresholds."
+    },
+    "recommendations": [
+      {
+        "priority": "HIGH",
+        "category": "Pathogen Prevention & Monitoring",
+        "action": "Inspect nearby Potato foliage for early symptoms of Potato Late Blight.",
+        "timeframe": "Within 24 to 48 hours",
+        "reason": "The disease classifier detected a high-probability (11%) Potato Late Blight pattern.",
+        "safety_note": "Consult a certified local agronomic specialist before applying fungicides or chemical treatments.",
+        "knowledge_ref": "FAO Crop Protection Standards - Section 4.2"
+      },
+      {
+        "priority": "HIGH",
+        "category": "Canopy Moisture Management",
+        "action": "Adjust irrigation schedules to early morning to allow leaf surfaces to dry rapidly.",
+        "timeframe": "Immediate",
+        "reason": "High humidity (88.0%) promotes fungal spore germination.",
+        "safety_note": "Avoid overhead sprinkler irrigation when foliage fungal lesions are present.",
+        "knowledge_ref": "IPM Humidity & Leaf Wetness Guidelines"
+      },
+      {
+        "priority": "MEDIUM",
+        "category": "Soil Conditioning",
+        "action": "Apply agricultural lime (calcium carbonate) to gradually elevate soil pH toward 6.5 - 7.0.",
+        "timeframe": "Next land preparation cycle",
+        "reason": "Current soil pH is 5.8, which restricts phosphorus and micronutrient uptake.",
+        "safety_note": "Conduct a comprehensive laboratory soil test before applying soil amendments.",
+        "knowledge_ref": "Soil Science Society Nutrient Availability Guide"
+      }
+    ],
+    "crop_health_score": 65,
+    "image_url": null
+  }
+]

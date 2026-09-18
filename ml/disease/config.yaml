@@ -1,0 +1,18 @@
+model:
+  name: "EfficientNet-B0"
+  version: "1.0.0"
+  num_classes: 11
+  image_size: 224
+
+training:
+  epochs: 15
+  batch_size: 16
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  val_split: 0.2
+  seed: 42
+
+paths:
+  model_output: "models/disease/model.pt"
+  labels: "ml/disease/labels.json"
+  metrics_output: "models/disease/metrics.json"

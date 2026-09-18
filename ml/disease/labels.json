@@ -1,0 +1,79 @@
+{
+  "0": {
+    "name": "Potato Late Blight",
+    "crop": "Potato",
+    "status": "Diseased",
+    "symptoms": ["Dark irregular leaf lesions", "White mold growth under damp conditions", "Rapid foliage decay"],
+    "description": "A destructive disease caused by the fungus-like organism Phytophthora infestans."
+  },
+  "1": {
+    "name": "Potato Early Blight",
+    "crop": "Potato",
+    "status": "Diseased",
+    "symptoms": ["Concentric dark brown rings", "Yellowing around spots", "Premature defoliation"],
+    "description": "Fungal disease caused by Alternaria solani affecting older leaves first."
+  },
+  "2": {
+    "name": "Potato Healthy",
+    "crop": "Potato",
+    "status": "Healthy",
+    "symptoms": ["Vibrant green foliage", "No discoloration", "Uniform leaf texture"],
+    "description": "Healthy potato foliage with optimal photosynthetic performance."
+  },
+  "3": {
+    "name": "Tomato Late Blight",
+    "crop": "Tomato",
+    "status": "Diseased",
+    "symptoms": ["Large greasy gray spots", "White fungal bloom on undersides", "Stem blackening"],
+    "description": "Severe oomycete infection causing rapid fruit and foliage collapse."
+  },
+  "4": {
+    "name": "Tomato Early Blight",
+    "crop": "Tomato",
+    "status": "Diseased",
+    "symptoms": ["Target-like concentric rings", "Lower leaf yellowing", "Target spot stem lesions"],
+    "description": "Common foliar disease spreading from lower canopy upward."
+  },
+  "5": {
+    "name": "Tomato Yellow Leaf Curl Virus",
+    "crop": "Tomato",
+    "status": "Diseased",
+    "symptoms": ["Severe leaf curling", "Chlorotic yellow margins", "Stunted plant growth"],
+    "description": "Viral infection transmitted by whiteflies leading to yield loss."
+  },
+  "6": {
+    "name": "Tomato Healthy",
+    "crop": "Tomato",
+    "status": "Healthy",
+    "symptoms": ["Clear green leaves", "Sturdy branching", "Zero foliage lesions"],
+    "description": "Optimal healthy tomato leaf state."
+  },
+  "7": {
+    "name": "Corn Common Rust",
+    "crop": "Corn",
+    "status": "Diseased",
+    "symptoms": ["Powdery pustules on leaf surface", "Cinnamon brown rust spots", "Leaf tissue necrosis"],
+    "description": "Fungal disease caused by Puccinia sorghi in cooler humid weather."
+  },
+  "8": {
+    "name": "Corn Healthy",
+    "crop": "Corn",
+    "status": "Healthy",
+    "symptoms": ["Long unbroken green blades", "Smooth texture", "Robust leaf structure"],
+    "description": "Normal healthy corn crop foliage."
+  },
+  "9": {
+    "name": "Wheat Stripe Rust",
+    "crop": "Wheat",
+    "status": "Diseased",
+    "symptoms": ["Yellow-orange stripes along leaf veins", "Powdery spore masses", "Weakened stalk"],
+    "description": "Puccinia striiformis fungal infection damaging wheat photosynthetic surface."
+  },
+  "10": {
+    "name": "Wheat Healthy",
+    "crop": "Wheat",
+    "status": "Healthy",
+    "symptoms": ["Uniform green leaves", "No vein rust pustules", "Healthy tillering"],
+    "description": "Healthy wheat crop condition."
+  }
+}

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: smartcrop-ai
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: ML_MODE
+        value: production
+      - key: DATABASE_NAME
+        value: smartcrop_db
+      - key: ENABLE_EXPLANATIONS
+        value: true
