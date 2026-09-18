@@ -86,7 +86,7 @@ class PDFReportGenerator:
             ],
             [
                 Paragraph("<b>Predicted Yield:</b> " + str(yield_info.get("predicted_yield", "N/A")) + " t/ha", body_style),
-                Paragraph("<b>Confidence:</b> " + str(int(disease_info.get("confidence", 0)*100)) + "%", body_style)
+                Paragraph("<b>Confidence:</b> " + str(int((disease_info.get("confidence") or 0)*100)) + "%", body_style)
             ],
             [
                 Paragraph("<b>Overall Crop Risk:</b> " + str(risk_info.get("risk_score", "N/A")) + " / 100", body_style),

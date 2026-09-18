@@ -80,6 +80,16 @@ class HistoryService:
         return None
 
     def delete_analysis(self, analysis_id: str) -> bool:
+        # Try MongoDB delete
+        try:
+            import pymongo
+            client = pymongo.MongoClient(settings.MONGODB_URL, serverSelectionTimeoutMS=1000)
+            db = client[settings.DATABASE_NAME]
+            db.crop_analyses.delete_one({"$or": [{"id": analysis_id}, {"_id": analysis_id}]})
+            client.close()
+        except Exception:
+            pass
+
         records = self._read_local()
         new_records = [r for r in records if r.get("id") != analysis_id and r.get("_id") != analysis_id]
         if len(new_records) != len(records):
