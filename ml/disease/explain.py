@@ -1,9 +1,9 @@
 import os
 import cv2
 import numpy as np
-import torch
-import torch.nn.functional as F
+# torch imported lazily inside methods to prevent OOM on Render free tier
 from PIL import Image
+from typing import Any, Optional
 
 class GradCAMExplainer:
     """
@@ -30,10 +30,12 @@ class GradCAMExplainer:
         self.target_layer.register_forward_hook(forward_hook)
         self.target_layer.register_full_backward_hook(backward_hook)
 
-    def generate_heatmap(self, input_tensor: torch.Tensor, target_class: int = None) -> np.ndarray:
+    def generate_heatmap(self, input_tensor: Any, target_class: Optional[int] = None) -> np.ndarray:
         """
         Computes Grad-CAM heatmap array normalized [0, 1].
         """
+        import torch  # lazy
+        import torch.nn.functional as F
         if self.target_layer is None or self.activations is None or self.gradients is None:
             # Fallback synthetic heatmap based on input tensor variance / region of interest
             return self._generate_fallback_heatmap(input_tensor)
@@ -80,7 +82,7 @@ class GradCAMExplainer:
         overlay = np.uint8(np.clip(overlay, 0, 255))
         return Image.fromarray(overlay)
 
-    def _generate_fallback_heatmap(self, input_tensor: torch.Tensor) -> np.ndarray:
+    def _generate_fallback_heatmap(self, input_tensor: Any) -> np.ndarray:
         """
         Generates realistic region-of-interest heatmap when custom gradients are unavailable.
         """

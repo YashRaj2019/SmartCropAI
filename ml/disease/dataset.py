@@ -2,8 +2,7 @@ import os
 import cv2
 import numpy as np
 from PIL import Image
-import torch
-from torch.utils.data import Dataset
+# torch/Dataset imported lazily — only needed for training scripts, not for inference
 
 class ImageQualityAnalyzer:
     """

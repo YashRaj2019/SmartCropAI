@@ -3,9 +3,10 @@ import json
 import cv2
 import numpy as np
 from PIL import Image
-import torch
-import torch.nn as nn
-from torchvision import transforms
+
+# torch, torch.nn and torchvision are imported lazily (inside methods) to
+# prevent OOM crashes on memory-constrained hosts (e.g. Render free 512 MB).
+# uvicorn can bind the port and serve health-checks before the heavy model loads.
 
 from ml.disease.dataset import ImageQualityAnalyzer
 from ml.disease.explain import GradCAMExplainer
@@ -16,13 +17,20 @@ class DiseasePredictor:
         self.labels_path = labels_path
         self.labels = self._load_labels()
         self.model = None
-        self.transforms = transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-        ])
+        self._transforms = None  # built lazily on first predict() to avoid OOM at startup
         self.is_production = False
         self.load()
+
+    def _get_transforms(self):
+        """Lazily import torchvision and build the transform pipeline on first use."""
+        if self._transforms is None:
+            from torchvision import transforms as tv_transforms
+            self._transforms = tv_transforms.Compose([
+                tv_transforms.Resize((224, 224)),
+                tv_transforms.ToTensor(),
+                tv_transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            ])
+        return self._transforms
 
     def _load_labels(self):
         if os.path.exists(self.labels_path):
@@ -34,6 +42,14 @@ class DiseasePredictor:
         return {}
 
     def load(self) -> bool:
+        try:
+            import torch  # lazy import — avoids OOM during uvicorn startup
+            import torch.nn as nn
+        except ImportError:
+            print("[DiseasePredictor] torch not available — running in demo mode.")
+            self.is_production = False
+            return False
+
         if os.path.exists(self.model_path):
             try:
                 self.model = torch.load(self.model_path, map_location=torch.device('cpu'), weights_only=False)
@@ -278,8 +294,9 @@ class DiseasePredictor:
                 "image_quality": quality
             }
 
+        import torch  # lazy import inside predict()
         rgb_image = pil_image.convert("RGB")
-        tensor = self.transforms(rgb_image).unsqueeze(0)
+        tensor = self._get_transforms()(rgb_image).unsqueeze(0)
         
         with torch.no_grad():
             raw_logits = self.model(tensor)[0].clone()
@@ -383,7 +400,7 @@ class DiseasePredictor:
             
         explainer = GradCAMExplainer(self.model, target_layer=target_layer)
         rgb_image = pil_image.convert("RGB")
-        tensor = self.transforms(rgb_image).unsqueeze(0)
+        tensor = self._get_transforms()(rgb_image).unsqueeze(0)
         tensor.requires_grad = True
         
         heatmap = explainer.generate_heatmap(tensor)
